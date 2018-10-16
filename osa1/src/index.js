@@ -181,6 +181,8 @@ const App = () => {
 
 */
 
+/* TEHTÄVÄ 1.5 */
+
 const App = () => {
   const kurssi = {
     nimi: 'Half Stack -sovelluskehitys',
