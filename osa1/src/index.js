@@ -295,7 +295,6 @@ class App extends React.Component {
       neutraali: 0,
       huono: 0,
       yhteensä: 0,
-     // this.setState( neutraali: this.state.yhteensä + 1 )
     }
   }
 
@@ -315,6 +314,7 @@ class App extends React.Component {
         <div>Hyvä {this.state.hyvä}</div>
         <div>Neutraali {this.state.neutraali}</div>
         <div>Huono {this.state.huono}</div>
+        <div>Keskiarvo {((this.state.hyvä)/this.state.yhteensä)*100}</div>
       </div>
     )
   }
