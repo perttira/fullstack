@@ -2,217 +2,327 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-/* TEHTÄVÄ 1.1 - 1.2
+/*
 
-
-const Otsikko = (props) => {
-
-    return (
-
-      <div>
-
-        <h1>{props.name}</h1>
-
-      </div>
-
-    )
-
-  }
-
-
-
-
-const Sisalto = (props) => {
-
-    return (
-
-      <div>
-
-        <Osa osa={props.osa1} tehtavia={props.tehtavia1}/>
-
-        <Osa osa={props.osa2} tehtavia={props.tehtavia2}/>
-
-        <Osa osa={props.osa3} tehtavia={props.tehtavia3}/>
-
-      </div>
-
-    )
-
-  }
-
-
-
-
-const Yhteensa = (props) => {
-
-    return (
-
-      <div>
-
-        <p>Yhteensä {props.yhteensa}</p>
-
-      </div>
-
-    )
-
-  }
-
-
-
-
-const Osa = (props) => {
-
-    return (
-
-      <div>
-
-        <p>{props.osa} {props.tehtavia}</p>
-
-      </div>
-
-    )
-
-  }
-
-
-
-
-
-
-
-const App = () => {
-
-  const kurssi = 'Half Stack -sovelluskehitys'
-
-  const osa1 = 'Reactin perusteet'
-
-  const tehtavia1 = 10
-
-  const osa2 = 'Tiedonvälitys propseilla'
-
-  const tehtavia2 = 7
-
-  const osa3 = 'Komponenttien tila'
-
-  const tehtavia3 = 14
-
-
-
-
+const App = (props) => {
+  const {counter} = props
   return (
-
-    <div>
-
-      <Otsikko name={kurssi} />
-
-      <Sisalto osa1={osa1} osa2={osa2} osa3={osa3} tehtavia1={tehtavia1} tehtavia2={tehtavia2} tehtavia3={tehtavia3}/>
-
-      <Yhteensa yhteensa={tehtavia1 + tehtavia2 + tehtavia3} />
-
-    </div>
-
+    <div>{counter.value}</div>
   )
-
 }
+
+const counter = {
+  value: 1
+}
+
+const renderoi = () => {
+  ReactDOM.render(
+    <App counter={counter} />,
+    document.getElementById('root')
+  )
+}
+
+setInterval(() => {
+  renderoi()
+  counter.value += 1;
+}, 1000)
 
 */
 
 
+/*
 
-/* TEHTÄVÄ 1.3
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      counter: 1
+    }
 
-const App = () => {
-    const kurssi = 'Half Stack -sovelluskehitys'
-    const osa1 = {
-      nimi: 'Reactin perusteet',
-      tehtavia: 10
-    }
-    const osa2 = {
-      nimi: 'Tiedonvälitys propseilla',
-      tehtavia: 7
-    }
-    const osa3 = {
-      nimi: 'Komponenttien tila',
-      tehtavia: 14
-    }
-  
+//  React-komponenttien tilaa, eli muuttujaa this.state ei saa päivittää suoraan,
+//  tilan päivitys on tehtävä aina funktion setState avulla.
+//  Metodin kutsuminen päivittää tilan ja aiheuttaa komponentin uuden 
+//  renderöinnin (ellei sitä ole estetty myöhemmin esiteltävällä tavalla). 
+//  Uudelleenrenderöinnin yhteydessä myös kaikki komponentin sisältämät 
+//  alikomponentit renderöidään.
+
+    setInterval(() => {
+      this.setState({ counter: this.state.counter + 1 })
+    }, 1000)
+  }
+  render() {
+    console.log('renderöidään', this.state.counter)
     return (
-      <div>
-        <h1>{kurssi}</h1>
-        <p>{osa1.nimi} {osa1.tehtavia}</p>
-        <p>{osa2.nimi} {osa2.tehtavia}</p>
-        <p>{osa3.nimi} {osa3.tehtavia}</p>
-        <p>Yhteensä {osa1.tehtavia + osa2.tehtavia + osa3.tehtavia}</p>
-      </div>
+      <div>{this.state.counter}</div>
     )
   }
-
-  */
-
-/* TEHTÄVÄ 1.4
-
-const App = () => {
-  const kurssi = 'Half Stack -sovelluskehitys'
-  const osat = [
-    {
-      nimi: 'Reactin perusteet',
-      tehtavia: 10
-    },
-    {
-      nimi: 'Tiedonvälitys propseilla',
-      tehtavia: 7
-    },
-    {
-      nimi: 'Komponenttien tila',
-      tehtavia: 14
-    }
-  ]
-
-  return (
-    <div>
-      <h1>{kurssi}</h1>  
-      <p>{osat[0]["nimi"]} {osat[0]["tehtavia"]}</p>
-      <p>{osat[1]["nimi"]} {osat[1]["tehtavia"]}</p>
-      <p>{osat[2]["nimi"]} {osat[2]["tehtavia"]}</p>
-      <p>Yhteensä {osat[0]["tehtavia"] + osat[1]["tehtavia"] + osat[2]["tehtavia"]}</p>
-    </div>
-  )
 }
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
 
 */
 
-/* TEHTÄVÄ 1.5 */
+/* TAPAHTUMANKÄSITTELIJÄ 
 
-const App = () => {
-  const kurssi = {
-    nimi: 'Half Stack -sovelluskehitys',
-    osat: [
-      {
-        nimi: 'Reactin perusteet',
-        tehtavia: 10
-      },
-      {
-        nimi: 'Tiedonvälitys propseilla',
-        tehtavia: 7
-      },
-      {
-        nimi: 'Komponenttien tila',
-        tehtavia: 14
-      }
-    ]
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      counter: 1
+    }
   }
 
-  return (
-    <div>
-      <h1>{kurssi.nimi}</h1>
-      <p>{kurssi.osat[0]["nimi"]} {kurssi.osat[0]["tehtavia"]}</p>
-      <p>{kurssi.osat[1]["nimi"]} {kurssi.osat[1]["tehtavia"]}</p>
-      <p>{kurssi.osat[2]["nimi"]} {kurssi.osat[2]["tehtavia"]}</p>
-      <p>Yhteensä {kurssi.osat[0]["tehtavia"] + kurssi.osat[1]["tehtavia"] + kurssi.osat[2]["tehtavia"]}</p>
-    </div>
-  )
+  render() {
+    return (
+      <div>
+        <div>{this.state.counter}</div>
+        <button onClick={() => this.setState({ counter: this.state.counter + 1 })}>
+          plus
+        </button>
+        <button onClick={() => this.setState({ counter: 0 })}>
+          zero
+        </button>
+      </div>
+    )
+  }
 }
 
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
 
-ReactDOM.render(<App />, document.getElementById('root'));
+*/
+
+/*   METODIEN KÄYTTÖ JA THIS    
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      counter: 1
+    }
+    this.kasvataYhdella = this.kasvataYhdella.bind(this)
+    this.nollaa = this.nollaa.bind(this)
+  }
+
+  kasvataYhdella() {
+    this.setState({ counter: this.state.counter + 1 })
+  }
+
+  nollaa() {
+    this.setState({ counter: 0 })
+  }
+
+  render() {
+    return (
+      <div>
+        <div>{this.state.counter}</div>
+        <div>
+        <button onClick={this.kasvataYhdella}>
+          plus
+        </button>
+        <button onClick={this.nollaa}>
+          zero
+        </button>
+        </div>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+
+*/
+
+
+/*   TILAN VIEMINEN ALIKOMPONENTTIIN   
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      counter: 1
+    }
+  }
+
+  asetaArvoon = (arvo) => {
+    return () => {
+      this.setState({ counter: arvo })
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <Display counter={this.state.counter}/>
+        <div>
+          <Button
+            handleClick={this.asetaArvoon(this.state.counter + 1)}
+            text="Plus"
+          />
+          <Button
+            handleClick={this.asetaArvoon(this.state.counter - 1)}
+            text="Minus"
+          />
+          <Button
+            handleClick={this.asetaArvoon(0)}
+            text="Zero"
+          />
+        </div>
+      </div>
+    )
+  }
+}
+
+// Voidaan lyhentää muotoon: const Display = ({ counter }) => <div>{counter}</div>
+const Display = (props) => {
+  return (
+    <div>{props.counter}</div>
+  )
+}
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+*/
+
+/*  MONIMUTKAISEMMAN TILAN PÄIVITTÄMINEN   
+
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      vasen: 0,
+      oikea: 0
+    }
+  }
+
+  klikVasen = () => {
+    this.setState({
+      vasen: this.state.vasen + 1
+    })
+  }
+
+  klikOikea = () => {
+    this.setState({
+      oikea: this.state.oikea + 1
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <div>
+          {this.state.vasen}
+          <button onClick={this.klikVasen}>vasen</button>
+          <button onClick={this.klikOikea}>oikea</button>
+          {this.state.oikea}
+        </div>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+  MONIMUTKAISEMMAN TILAN PÄIVITTÄMINEN */
+
+/*      1.6 unicafe osa1    
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      hyvä: 0,
+      neutraali: 0,
+      huono: 0
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.setState({ hyvä: this.state.hyvä + 1 })}>
+          Hyvä
+        </button>
+        <button onClick={() => this.setState({ neutraali: this.state.neutraali + 1 })}>
+          Neutraali
+        </button>
+        <button onClick={() => this.setState({ huono: this.state.huono + 1 })}>
+          Huono
+        </button>
+        <div><h1>Statistiikka</h1></div>
+        <div>Hyvä {this.state.hyvä}</div>
+        <div>Neutraali {this.state.neutraali}</div>
+        <div>Huono {this.state.huono}</div>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+*/
+
+/*    1.7 UNICAFE OSA2   */
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      hyvä: 0,
+      neutraali: 0,
+      huono: 0,
+      yhteensä: 0,
+     // this.setState( neutraali: this.state.yhteensä + 1 )
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.setState({ hyvä: this.state.hyvä + 1, yhteensä: this.state.yhteensä + 1 })}>
+          Hyvä
+        </button>
+        <button onClick={() => this.setState({ neutraali: this.state.neutraali + 1, yhteensä: this.state.yhteensä + 1 })}>
+          Neutraali
+        </button>
+        <button onClick={() => this.setState({ huono: this.state.huono + 1, yhteensä: this.state.yhteensä + 1 })}>
+          Huono
+        </button>
+        <div><h1>Statistiikka</h1></div>
+        <div>Hyvä {this.state.hyvä}</div>
+        <div>Neutraali {this.state.neutraali}</div>
+        <div>Huono {this.state.huono}</div>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
 
