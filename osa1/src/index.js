@@ -285,7 +285,7 @@ ReactDOM.render(
 
 */
 
-/*    1.7 UNICAFE OSA2   */
+/*    1.7 UNICAFE OSA2   
 
 class App extends React.Component {
   constructor() {
@@ -299,8 +299,27 @@ class App extends React.Component {
   }
 
   render() {
+
+    let positiivisia=0;
+    let keskiarvo =0;
+    
+    //console.log(isNaN (((this.state.hyvä)/this.state.yhteensä)*100))
+
+    if (isNaN (((this.state.hyvä)/this.state.yhteensä)*100)) {
+      positiivisia = <div>Positiivisia 0%</div> ;
+    } else {
+      positiivisia = <div>Positiivisia {((this.state.hyvä)/this.state.yhteensä)*100}%</div> ;
+    }
+
+    if (isNaN ((((this.state.hyvä + (-Math.abs(this.state.huono)))/this.state.yhteensä)*100))) {
+      keskiarvo = <div>Keskiarvo 0</div> ;
+    } else {
+      keskiarvo = <div>keskiarvo {(((this.state.hyvä + (-Math.abs(this.state.huono)))/this.state.yhteensä)*100)}</div> ;
+    }
+
     return (
       <div>
+        <div><h1>Anna palautetta</h1></div>
         <button onClick={() => this.setState({ hyvä: this.state.hyvä + 1, yhteensä: this.state.yhteensä + 1 })}>
           Hyvä
         </button>
@@ -314,7 +333,8 @@ class App extends React.Component {
         <div>Hyvä {this.state.hyvä}</div>
         <div>Neutraali {this.state.neutraali}</div>
         <div>Huono {this.state.huono}</div>
-        <div>Keskiarvo {((this.state.hyvä)/this.state.yhteensä)*100}</div>
+        <div>{keskiarvo}</div>
+        <div>{positiivisia}</div>
       </div>
     )
   }
@@ -325,4 +345,220 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
+*/
 
+/*     1.8 UNICAFE OSA 3       
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      hyvä: 0,
+      neutraali: 0,
+      huono: 0,
+      yhteensä: 0,
+    }
+  }
+
+  onkoNan(luku) {
+    let palautettava
+    if (isNaN(luku)) {
+      palautettava = 0
+    } else {
+      palautettava = luku
+    }
+    return palautettava
+  }
+
+  laskeKeskiarvo() {
+    let keskiarvo = (((this.state.hyvä + (-Math.abs(this.state.huono)))/this.state.yhteensä)*100)
+    return this.onkoNan(keskiarvo)
+  }
+
+  laskePositiiviset() {
+    let positiiviset = (((this.state.hyvä)/this.state.yhteensä)*100)
+    return this.onkoNan(positiiviset)
+  }
+
+  asetaArvoon = (arvo,arviointi) => () => this.setState({[arviointi]: arvo, yhteensä: this.state.yhteensä+1})
+
+  render() {
+    
+    return (
+      <div>
+        <div><h1>Anna palautetta</h1></div>
+        <Button
+          handleClick={this.asetaArvoon(this.state.hyvä + 1, "hyvä")}
+          text="Hyvä"
+        />
+        <Button
+          handleClick={this.asetaArvoon(this.state.neutraali + 1, "neutraali")}
+          text="Neutraali"
+        />
+        <Button
+          handleClick={this.asetaArvoon(this.state.huono + 1, "huono")}
+          text="Huono"
+        />
+        <div><h1>Statistiikka</h1></div>
+          <Statistics hyviä={this.state.hyvä} neutraaleja={this.state.neutraali} huonoja={this.state.huono} positiiviset = {this.laskePositiiviset()}/>
+          <Statistic keskiarvo={this.laskeKeskiarvo()}/>
+        </div>
+    )
+  }
+}
+
+
+const Button = ({ handleClick, text}) => (
+  <button onClick={handleClick}>
+  {console.log(handleClick)}
+    {text}
+  </button>
+)
+
+const Statistic = ({ keskiarvo }) => {
+  return (
+    <div>Keskiarvo {keskiarvo}</div>
+  )
+}
+
+const Statistics = ({ hyviä, neutraaleja, huonoja, positiiviset }) => {
+  return (
+    <div>
+      <div>Hyviä {hyviä}</div>
+      <div>Neutraaleja {neutraaleja}</div>
+      <div>Huonoja {huonoja}</div>
+      <div>Positiivisia {positiiviset}%</div>
+    </div>
+  )
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+*/
+
+/*      UNICAFE 1.9 OSA 4       
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      hyvä: 0,
+      neutraali: 0,
+      huono: 0,
+      yhteensä: 0,
+    }
+  }
+
+  onkoPalautteita() {
+    let palautteita = false
+    if(this.state.yhteensä!=0){
+      palautteita = true
+    }
+    return palautteita
+  }
+
+  onkoNan(luku) {
+    let palautettava
+    if (isNaN(luku)) {
+      palautettava = 0
+    } else {
+      palautettava = luku
+    }
+    return palautettava
+  }
+
+  laskeKeskiarvo() {
+    let keskiarvo = (((this.state.hyvä + (-Math.abs(this.state.huono)))/this.state.yhteensä)*100)
+    return this.onkoNan(keskiarvo)
+  }
+
+  laskePositiiviset() {
+    let positiiviset = (((this.state.hyvä)/this.state.yhteensä)*100)
+    return this.onkoNan(positiiviset)
+  }
+
+  asetaArvoon = (arvo,arviointi) => () => this.setState({[arviointi]: arvo, yhteensä: this.state.yhteensä+1})
+
+  render() {
+    let arvo = 1
+    if(this.onkoPalautteita()){
+      return(
+        <div>
+          <div><h1>Anna palautetta</h1></div>
+          <Button
+            handleClick={this.asetaArvoon(this.state.hyvä + 1, "hyvä")}
+            text="Hyvä"
+          />
+          <Button
+            handleClick={this.asetaArvoon(this.state.neutraali + 1, "neutraali")}
+            text="Neutraali"
+          />
+          <Button
+            handleClick={this.asetaArvoon(this.state.huono + 1, "huono")}
+            text="Huono"
+          />
+        
+          <div><h1>Statistiikka</h1></div>
+            <Statistics hyviä={this.state.hyvä} neutraaleja={this.state.neutraali} huonoja={this.state.huono} positiiviset = {this.laskePositiiviset()}/>
+            <Statistic keskiarvo={this.laskeKeskiarvo()}/>
+          </div>
+      ) 
+    }else{
+      return (
+        <div>
+          <div><h1>Anna palautetta</h1></div>
+          <Button
+            handleClick={this.asetaArvoon(this.state.hyvä + 1, "hyvä")}
+            text="Hyvä"
+          />
+          <Button
+            handleClick={this.asetaArvoon(this.state.neutraali + 1, "neutraali")}
+            text="Neutraali"
+          />
+          <Button
+            handleClick={this.asetaArvoon(this.state.huono + 1, "huono")}
+            text="Huono"
+          />
+        
+          <div><h1>Statistiikka</h1></div>
+            <p>ei yhtään palautetta annettu</p>
+          </div>
+      )
+    } //else
+  }
+}
+
+
+const Button = ({ handleClick, text}) => (
+  <button onClick={handleClick}>
+  {console.log(handleClick)}
+    {text}
+  </button>
+)
+
+const Statistic = ({ keskiarvo }) => {
+  return (
+    <div>Keskiarvo {keskiarvo}</div>
+  )
+}
+
+const Statistics = ({ hyviä, neutraaleja, huonoja, positiiviset }) => {
+  return (
+    <div>
+      <div>Hyviä {hyviä}</div>
+      <div>Neutraaleja {neutraaleja}</div>
+      <div>Huonoja {huonoja}</div>
+      <div>Positiivisia {positiiviset}%</div>
+    </div>
+  )
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+*/
