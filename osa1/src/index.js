@@ -705,6 +705,8 @@ ReactDOM.render(
 
 /*       1.12 ANEKDOOTIT OSA 1      */
 
+
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -716,90 +718,88 @@ class App extends React.Component {
        pisteet4: 0,
        pisteet5: 0,
        satunnaisluku: 0,
+       random: []
       }
   }
 
-  _renderObject(){
-    let i = this.state.satunnaisluku
-    console.log("LUETTU SATUNNAISLUKU:", typeof(i))
-    console.log("SATUNNAISLUKU:", this.state.satunnaisluku)
+  arvoSatunnaisluku = () => () => this.setState({satunnaisluku: Math.floor((Math.random() * 6) + 0)})
 
-    console.log("this.props[i]", this.props.anecdotes[2].pisteet)
-    for(let i = 0; i < this.props.length; i++) {
-      if(this.props[i] === this.state.satunnaisluku){
-      console.log("FOR IF SISÄLLÄ")
-      console.log("FOR IF SISÄLLÄ anecdotes[i].name :", anecdotes[i].name)
+  addVote = () => () => { 
+    //const kopio = [...anecdotes]
+    console.log("addVote anecdotes :", anecdotes)
+    anecdotes[this.state.satunnaisluku].pisteet += 1
+    this.setState({selected: 1})
+    //console.log("addVote kopio :", kopio)
 
-      }
+   }
 
-      /* FILTTERI
+  render() {
+    return (
+      <div>
+        <div>
+            { <Anekdootti satunnaisluku={this.state.satunnaisluku}/>}
+        </div>
+        <span>
+          <VoteButton
+            handleClick={this.addVote()}
+            text="vote" 
+          />
+        </span>
+        <span>
+          <Button
+            handleClick={this.arvoSatunnaisluku()}
+            text="next anecdote"
+          />
+        </span>
+        <div>
 
-      var ages = [32, 33, 16, 40];
-
-      function checkAdult(age) {
-        return age >= 18;
-      }
-
-      function myFunction() {
-        document.getElementById("demo").innerHTML = ages.filter(checkAdult);
-      }
-
-      MAP
-
-      let names = anecdotes.map(function(anecdote) {
-        return anecdote.name
-      }
-
-       // SHORT let names = anecdotes.map(function(anecdote) => anecdote.name)
-       // SHORTER let names = anecdotes.map(function(x) => x.name)
-       // REJECT
-       // REDUCE  let orders = [
-       //  { amount: 250 },
-       //  { amount: 400 },
-       //  { amount: 100 },
-       //  { amount: 325 }
-       //  ]
-       //  
-       //  let totalAmoun = orders.reduce(function(sum, order) {
-       //  return sum + order.amount
-       //  } 0)
-      
-      */
-      
-    }
-
-  /*
-    for (let key in anecdotes) {
-      console.log("KULLI",anecdotes[2].name);
-    }
-
-		return Object.entries(anecdotes).map(([key, value], i) => {
-
-      console.log(Object.entries(anecdotes))
-			return (
-				<div key={key}>
-					pisteet is: {value.pisteet} ;
-					name is: {value.name}
-				</div>
-			)
-    })
-    */
-	}
-
-
-//  arvoSatunnaisluku = () => () => this.setState({selected: Math.floor((Math.random() * 6) + 0)})
-
-  arvoSatunnaisluku = () => () => this.setState({satunnaisluku: Math.floor((Math.random() * 7) + 0)})
-  
-  /*{
-    let satunnaisluku 
-    satunnaisluku = (Math.floor((Math.random() * 6) + 0))
-    return satunnaisluku
-    console.log(satunnaisluku)
+			  </div>
+      </div>
+    )
   }
-  */
+}
 
-  addVote() {
+
+
+const anecdotes = [
+  { id: 1, pisteet: 0, content: 'If it hurts, do it more often'},
+  { id: 2, pisteet: 0, content: 'Adding manpower to a late software project makes it later!'},
+  { id: 3, pisteet: 0, content: 'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.'},
+  { id: 4, pisteet: 0, content: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.'},
+  { id: 5, pisteet: 0, content: 'Premature optimization is the root of all evil.'},
+  { id: 6, pisteet: 0, content: 'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'}
+]
+
+const Anekdootti = ({ satunnaisluku }) => {
+  console.log(satunnaisluku)
+  console.log("anecdotes", anecdotes)
+  return (
+    <div>
+      <p>{anecdotes[satunnaisluku].content}</p>
+      <p>Has {anecdotes[satunnaisluku].pisteet} votes</p>
+    </div>
+  )
+}
+
+const Button = ({ handleClick, text}) => (
+  <button onClick={handleClick}>
+  {console.log(handleClick)}
+    {text}
+  </button>
+)
+
+const VoteButton = ({ handleClick, text}) => (
+  <button onClick={handleClick}>
+  {console.log(handleClick)}
+    {text}
+  </button>
+)
+
+ReactDOM.render(
+  <App anecdotes={anecdotes} />,
+  document.getElementById('root')
+)
+
 
    /* let tapaus
     switch(this.state.selected) {
@@ -828,84 +828,108 @@ class App extends React.Component {
     this.setState({[tapaus]: this.state.selected})
 */
 
+
+
+/*_renderObject(){
+  let i = this.state.satunnaisluku
+  console.log("LUETTU SATUNNAISLUKU:", typeof(i))
+  console.log("SATUNNAISLUKU:", this.state.satunnaisluku)
+
+  console.log("this.props[i]", this.props.anecdotes[2].pisteet)
+  for(let i = 0; i < this.props.length; i++) {
+    if(this.props[i] === this.state.satunnaisluku){
+    console.log("FOR IF SISÄLLÄ")
+    console.log("FOR IF SISÄLLÄ anecdotes[i].name :", anecdotes[i].name)
+
+    }
+
+    FILTTERI
+
+    var ages = [32, 33, 16, 40];
+
+    function checkAdult(age) {
+      return age >= 18;
+    }
+
+    function myFunction() {
+      document.getElementById("demo").innerHTML = ages.filter(checkAdult);
+    }
+
+    MAP
+
+    let names = anecdotes.map(function(anecdote) {
+      return anecdote.name
+    }
+
+     // SHORT let names = anecdotes.map(function(anecdote) => anecdote.name)
+     // SHORTER let names = anecdotes.map(function(x) => x.name)
+     // REJECT
+     // REDUCE  let orders = [
+     //  { amount: 250 },
+     //  { amount: 400 },
+     //  { amount: 100 },
+     //  { amount: 325 }
+     //  ]
+     //  
+     //  let totalAmoun = orders.reduce(function(sum, order) {
+     //  return sum + order.amount
+     //  } 0)
+    
+    */
+    
+  
+
+/*
+  for (let key in anecdotes) {
+    console.log("KULLI",anecdotes[2].name);
   }
+
+  return Object.entries(anecdotes).map(([key, value], i) => {
+
+    console.log(Object.entries(anecdotes))
+    return (
+      <div key={key}>
+        pisteet is: {value.pisteet} ;
+        name is: {value.name}
+      </div>
+    )
+  })
+  */
+
+
+  /*
+ const list = [
+  { id: 1, pisteet: 0, content: 'If it hurts, do it more often'},
+  { id: 2, pisteet: 0, content: 'Adding manpower to a late software project makes it later!'},
+  { id: 3, pisteet: 0, content: 'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.'},
+  { id: 4, pisteet: 0, content: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.'},
+  { id: 5, pisteet: 0, content: 'Premature optimization is the root of all evil.'},
+  { id: 6, pisteet: 0, content: 'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'}
+]
+
+class App extends React.Component {
   render() {
     return (
       <div>
-        <div>
-          {this.props.anecdotes[this.state.selected].anekdootti}
-        </div>
-        <span>
-          <VoteButton
-            handleClick={this.addVote()}
-            text="vote" 
-          />
-        </span>
-        <span>
-          <Button
-            handleClick={this.arvoSatunnaisluku()}
-            text="next anecdote"
-          />
-        </span>
-        <div>
-				  {this._renderObject()}
-			  </div>
+        {list.map(list_map =><Anekdootti key={list_map.id} name={list_map.content} />)}
       </div>
+    )
+}
+}
+
+class Anekdootti extends React.Component {
+  render() {
+    return (
+    <div className="App">{this.props.name} 
+    <button onClick={console.log('button clicked')}>+</button>
+    </div>
     )
   }
 }
 
-/*
-const anecdotes = {
-  1: {
-      pisteet: 0,
-      name:'If it hurts, do it more often'
-  },
-  2: {
-      pisteet: 0,
-      name:'Adding manpower to a late software project makes it later!'
-  },
-  3: {
-    pisteet: 0,
-    name:'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.'
-  },
-  4: {
-  pisteet: 0,
-  name:'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.'
-  },
-  5: {
-  pisteet: 0,
-  name:'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-  }
-}
-
-*/
-
-const anecdotes = [
-  { pisteet: 1, anekdootti: 'If it hurts, do it more often'},
-  { pisteet: 2, anekdootti: 'Adding manpower to a late software project makes it later!'},
-  { pisteet: 3, anekdootti: 'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.'},
-  { pisteet: 4, anekdootti: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.'},
-  { pisteet: 5, anekdootti: 'Premature optimization is the root of all evil.'},
-  { pisteet: 6, anekdootti: 'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'}
-]
-
-
-const Button = ({ handleClick, text}) => (
-  <button onClick={handleClick}>
-  {console.log(handleClick)}
-    {text}
-  </button>
-)
-
-const VoteButton = ({ handleClick, text}) => (
-  <button onClick={handleClick}>
-  {console.log(handleClick)}
-    {text}
-  </button>
-)
-
 ReactDOM.render(
-  <App anecdotes={anecdotes} />,
+  <App/>,
   document.getElementById('root')
 )
+
+*/
