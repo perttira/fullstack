@@ -2,6 +2,7 @@ import React from 'react'
 import Kurssi from './components/Kurssi'
 import Otsikko from './components/Otsikko'
 import Yhteensa from './components/Yhteensa'
+import Note from './components/Note'
 import './style.css';
 
 /*
@@ -84,7 +85,7 @@ const App = () => {
         },
         {
           nimi: 'Komponenttien tila',
-          tehtavia: 14,
+          tehtavia: 14, 
           id: 3
         }
       ]
@@ -141,4 +142,86 @@ const tulostaKurssit = () => {
 export default App;
 
 */
+
+
+//    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2
+
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      persons: [
+        { 
+          name: 'Arto Hellas',
+          id: '0'
+        }
+      ],
+      newName: ''
+    }
+  }
+
+  addNote = (event) => {
+
+    event.preventDefault()
+
+    var onkoNimiOlemassa = true
+
+    this.state.persons.forEach(function(item, index) {
+      console.log("this", this)
+      if(item.name === this.state.newName){
+        console.log("SAMANIMI")
+        onkoNimiOlemassa = false
+      }
+     }.bind(this));
+      
+     if(onkoNimiOlemassa) {
+       
+      const noteObject = {
+        name: this.state.newName,
+        id: this.state.persons.length + 1
+        }
+        
+       const persons = this.state.persons.concat(noteObject)
+       
+       this.setState({
+         persons: persons,
+         newName: ''
+       })
+        alert("Nimi tallennettu");
+      }else{
+        this.setState({
+          newName: ''
+        })
+        alert("Tämä nimi on jo olemassa! Kirjoita jokin toinen nimi.");
+      }
+       
+  }
+
+  handleNoteChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newName: event.target.value })
+  }
+
+  toggleVisible = () => {
+    this.setState({showAll: !this.state.showAll})
+  }
+
+  render() {
+    
+    return (
+      <div>
+        <h1>Puhelinluettelo</h1>
+        <ul>
+          {this.state.persons.map(person => <Note key={person.id} name={person.name} />)}
+        </ul>
+        <form onSubmit={this.addNote}>
+          <input value={this.state.newName} 
+            onChange={this.handleNoteChange}/>
+          <button type="submit">tallenna</button>
+        </form>
+      </div>
+    )
+  }
+}
+export default App
 
