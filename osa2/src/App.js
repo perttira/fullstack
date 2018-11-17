@@ -144,7 +144,8 @@ export default App;
 */
 
 
-//    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2
+//    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2 &
+//    2.8 puhelinluettelo osa 3
 
 class App extends React.Component {
   constructor(props) {
@@ -152,11 +153,27 @@ class App extends React.Component {
     this.state = {
       persons: [
         { 
-          name: 'Arto Hellas',
+          name: 'Bertta Siippa',
+          phone: '050-7654321',
           id: '0'
+        },
+        { 
+          name: 'Aapo Kuullos',
+          phone: '050-3532666',
+          id: '1'
+        },        { 
+          name: 'Cecilia Milan',
+          phone: '040-3555666',
+          id: '2'
+        },        { 
+          name: 'Faarao Muhammed',
+          phone: '050-1234567',
+          id: '3'
         }
       ],
-      newName: ''
+      newName: '',
+      newPhone: '',
+      filter: ''
     }
   }
 
@@ -178,6 +195,7 @@ class App extends React.Component {
        
       const noteObject = {
         name: this.state.newName,
+        phone: this.state.newPhone,
         id: this.state.persons.length + 1
         }
         
@@ -185,21 +203,30 @@ class App extends React.Component {
        
        this.setState({
          persons: persons,
-         newName: ''
+         newName: '',
+         newPhone: ''
        })
         alert("Nimi tallennettu");
       }else{
         this.setState({
-          newName: ''
+          newName: '',
+          newPhone: ''
         })
         alert("Tämä nimi on jo olemassa! Kirjoita jokin toinen nimi.");
       }
        
   }
 
-  handleNoteChange = (event) => {
-    console.log(event.target.value)
-    this.setState({ newName: event.target.value })
+  handleChanges = (event) => {
+
+    console.log("event.target.value", event.target.name)
+    console.log("this.state[newName]", this.state["newName"])
+
+    if(event.target.name === "newName"){
+      this.setState({ newName: event.target.value })
+    }else{
+      this.setState({ newPhone: event.target.value });
+    }
   }
 
   toggleVisible = () => {
@@ -207,18 +234,28 @@ class App extends React.Component {
   }
 
   render() {
-    
+    const notesToShow = this.state.persons.filter(person => person.name === this.state.filter)
+
+  const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
     return (
       <div>
         <h1>Puhelinluettelo</h1>
-        <ul>
-          {this.state.persons.map(person => <Note key={person.id} name={person.name} />)}
-        </ul>
+        <label>rajaa näytettäviä </label><input name="filter" value={this.state.filter} 
+            onChange={this.handleChanges}/>
         <form onSubmit={this.addNote}>
-          <input value={this.state.newName} 
-            onChange={this.handleNoteChange}/>
+          <label>nimi: </label><input name="newName" value={this.state.newName} 
+            onChange={this.handleChanges}/>
+            <br/>
+          <label>numero: </label><input name="newPhone" value={this.state.newPhone} 
+            onChange={this.handleChanges}/>
+            <br/>
           <button type="submit">tallenna</button>
         </form>
+        <h1>Numerot</h1>
+        <ul>
+          {this.state.persons.map(person => <Note key={person.id} name={person.name} phone={person.phone}/>)}
+          Filtteröidyt : {notesToShow.map(note => <Note key={note.id} note={note} />)}
+        </ul>
       </div>
     )
   }
