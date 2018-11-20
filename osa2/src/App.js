@@ -145,7 +145,7 @@ export default App;
 
 
 //    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2 &
-//    2.8 puhelinluettelo osa 3
+//    2.8 puhelinluettelo osa 3 & 2.9* puhelinluettelo osa 4
 
 class App extends React.Component {
   constructor(props) {
@@ -224,8 +224,10 @@ class App extends React.Component {
 
     if(event.target.name === "newName"){
       this.setState({ newName: event.target.value })
+    }else if (event.target.name === "newPhone") {
+      this.setState({ newPhone: event.target.value })
     }else{
-      this.setState({ newPhone: event.target.value });
+      this.setState({ filter: event.target.value })
     }
   }
 
@@ -234,14 +236,15 @@ class App extends React.Component {
   }
 
   render() {
-    const notesToShow = this.state.persons.filter(person => person.name === this.state.filter)
-
+    const notesToShow = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
+    //console.log("startsWith ", this.state.persons[0].name.startsWith('Bertta Siippaa'));
   const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
     return (
       <div>
         <h1>Puhelinluettelo</h1>
         <label>rajaa näytettäviä </label><input name="filter" value={this.state.filter} 
             onChange={this.handleChanges}/>
+        <h1>Lisää uusi</h1>
         <form onSubmit={this.addNote}>
           <label>nimi: </label><input name="newName" value={this.state.newName} 
             onChange={this.handleChanges}/>
@@ -253,8 +256,7 @@ class App extends React.Component {
         </form>
         <h1>Numerot</h1>
         <ul>
-          {this.state.persons.map(person => <Note key={person.id} name={person.name} phone={person.phone}/>)}
-          Filtteröidyt : {notesToShow.map(note => <Note key={note.id} note={note} />)}
+          {notesToShow.map(person => <Note key={person.id} name={person.name} phone={person.phone}/>)}
         </ul>
       </div>
     )
