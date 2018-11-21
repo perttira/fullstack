@@ -2,7 +2,7 @@ import React from 'react'
 import Kurssi from './components/Kurssi'
 import Otsikko from './components/Otsikko'
 import Yhteensa from './components/Yhteensa'
-import Note from './components/Note'
+import Henkilot from './components/Henkilot'
 import './style.css';
 
 /*
@@ -146,6 +146,7 @@ export default App;
 
 //    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2 &
 //    2.8 puhelinluettelo osa 3 & 2.9* puhelinluettelo osa 4
+//    & 2.10 puhelinluettelo osa 5
 
 class App extends React.Component {
   constructor(props) {
@@ -184,9 +185,7 @@ class App extends React.Component {
     var onkoNimiOlemassa = true
 
     this.state.persons.forEach(function(item, index) {
-      console.log("this", this)
       if(item.name === this.state.newName){
-        console.log("SAMANIMI")
         onkoNimiOlemassa = false
       }
      }.bind(this));
@@ -236,14 +235,14 @@ class App extends React.Component {
   }
 
   render() {
-    const notesToShow = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
-    //console.log("startsWith ", this.state.persons[0].name.startsWith('Bertta Siippaa'));
-  const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
+
+    const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
+    console.log("handleChanges ", this.handleChanges) 
     return (
       <div>
         <h1>Puhelinluettelo</h1>
-        <label>rajaa näytettäviä </label><input name="filter" value={this.state.filter} 
-            onChange={this.handleChanges}/>
+        <label>rajaa näytettäviä </label>
+          <Rajaa name="filter" value={this.state.filter} onChange={this.handleChanges} persons={this.state.persons}/>
         <h1>Lisää uusi</h1>
         <form onSubmit={this.addNote}>
           <label>nimi: </label><input name="newName" value={this.state.newName} 
@@ -256,11 +255,22 @@ class App extends React.Component {
         </form>
         <h1>Numerot</h1>
         <ul>
-          {notesToShow.map(person => <Note key={person.id} name={person.name} phone={person.phone}/>)}
+          {filtteroi.map(person => <Henkilot key={person.id} name={person.name} phone={person.phone}/>)}
         </ul>
       </div>
     )
   }
 }
+
+const Rajaa = (props) => {
+  return (
+    <div>
+      {props.value}
+      <input name={props.name} value={props.value}  onChange={props.onChange}/>
+      
+    </div>
+  )
+}
+
 export default App
 

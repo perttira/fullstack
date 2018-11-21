@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Note = ({ name, phone }) => {
+const Henkilot = ({ name, phone }) => {
   return (
     <li>{name} {phone}</li>
   )
 }
 
-export default Note
+export default Henkilot
