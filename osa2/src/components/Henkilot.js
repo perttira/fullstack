@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Henkilot = ({ name, phone }) => {
+const Henkilot = ({ name, number }) => {
   return (
-    <li>{name} {phone}</li>
+    <li>{name} {number}</li>
   )
 }
 

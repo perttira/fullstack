@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import Kurssi from './components/Kurssi'
 import Otsikko from './components/Otsikko'
 import Yhteensa from './components/Yhteensa'
@@ -146,37 +147,34 @@ export default App;
 
 //    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2 &
 //    2.8 puhelinluettelo osa 3 & 2.9* puhelinluettelo osa 4
-//    & 2.10 puhelinluettelo osa 5
+//    & 2.10 puhelinluettelo osa 5 & 2.11 osa 6 & 2.14 puhelinluettelo osa 7
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        { 
-          name: 'Bertta Siippa',
-          phone: '050-7654321',
-          id: '0'
-        },
-        { 
-          name: 'Aapo Kuullos',
-          phone: '050-3532666',
-          id: '1'
-        },        { 
-          name: 'Cecilia Milan',
-          phone: '040-3555666',
-          id: '2'
-        },        { 
-          name: 'Faarao Muhammed',
-          phone: '050-1234567',
-          id: '3'
-        }
-      ],
+      persons: [],
+      filtteroi: [],
       newName: '',
-      newPhone: '',
-      filter: ''
+      newNumber: '',
+      filter: '',
     }
   }
+
+  
+  componentDidMount() {
+    console.log('did mount')
+
+    axios
+      .get('http://localhost:3001/db')
+      .then(response => {
+
+       let mapattuPersons = response.data['persons'].map((person) => person)
+       this.setState({ persons: mapattuPersons })
+       this.setState({filtteroi: mapattuPersons })
+      })
+  }
+
 
   addNote = (event) => {
 
@@ -194,7 +192,7 @@ class App extends React.Component {
        
       const noteObject = {
         name: this.state.newName,
-        phone: this.state.newPhone,
+        number: this.state.newNumber,
         id: this.state.persons.length + 1
         }
         
@@ -203,18 +201,19 @@ class App extends React.Component {
        this.setState({
          persons: persons,
          newName: '',
-         newPhone: ''
+         newNumber: ''
        })
         alert("Nimi tallennettu");
       }else{
         this.setState({
           newName: '',
-          newPhone: ''
+          newNumber: ''
         })
         alert("Tämä nimi on jo olemassa! Kirjoita jokin toinen nimi.");
       }
        
   }
+
 
   handleChanges = (event) => {
 
@@ -223,21 +222,23 @@ class App extends React.Component {
 
     if(event.target.name === "newName"){
       this.setState({ newName: event.target.value })
-    }else if (event.target.name === "newPhone") {
-      this.setState({ newPhone: event.target.value })
+    }else if (event.target.name === "newNumber") {
+      this.setState({ newNumber: event.target.value })
     }else{
       this.setState({ filter: event.target.value })
     }
   }
 
+
   toggleVisible = () => {
     this.setState({showAll: !this.state.showAll})
   }
 
+
   render() {
 
     const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
-    console.log("handleChanges ", this.handleChanges) 
+
     return (
       <div>
         <h1>Puhelinluettelo</h1>
@@ -248,14 +249,15 @@ class App extends React.Component {
           <label>nimi: </label><input name="newName" value={this.state.newName} 
             onChange={this.handleChanges}/>
             <br/>
-          <label>numero: </label><input name="newPhone" value={this.state.newPhone} 
+          <label>numero: </label><input name="newNumber" value={this.state.newNumber} 
             onChange={this.handleChanges}/>
             <br/>
           <button type="submit">tallenna</button>
         </form>
         <h1>Numerot</h1>
         <ul>
-          {filtteroi.map(person => <Henkilot key={person.id} name={person.name} phone={person.phone}/>)}
+        {filtteroi.map(person => <Henkilot key={person.id} name={person.name} number={person.number}/>)}
+
         </ul>
       </div>
     )
@@ -265,12 +267,9 @@ class App extends React.Component {
 const Rajaa = (props) => {
   return (
     <div>
-      {props.value}
       <input name={props.name} value={props.value}  onChange={props.onChange}/>
-      
     </div>
   )
 }
 
 export default App
-
