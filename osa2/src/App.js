@@ -161,13 +161,13 @@ class App extends React.Component {
     }
   }
 
-  
   componentDidMount() {
     console.log('did mount')
 
     axios
       .get('http://localhost:3001/db')
       .then(response => {
+        console.log("axios get response", response)
 
        let mapattuPersons = response.data['persons'].map((person) => person)
        this.setState({ persons: mapattuPersons })
@@ -175,46 +175,41 @@ class App extends React.Component {
       })
   }
 
-
-  addNote = (event) => {
-
-    event.preventDefault()
-
-    var onkoNimiOlemassa = true
-
-    this.state.persons.forEach(function(item, index) {
-      if(item.name === this.state.newName){
-        onkoNimiOlemassa = false
-      }
-     }.bind(this));
-      
-     if(onkoNimiOlemassa) {
        
-      const noteObject = {
-        name: this.state.newName,
-        number: this.state.newNumber,
-        id: this.state.persons.length + 1
+      addNote = (event) => {
+        event.preventDefault()
+        const noteObject = {
+          name: this.state.newName,
+          number: this.state.newNumber,
+         // important: Math.random() > 0.5
         }
-        
-       const persons = this.state.persons.concat(noteObject)
-       
-       this.setState({
-         persons: persons,
-         newName: '',
-         newNumber: ''
-       })
-        alert("Nimi tallennettu");
-      }else{
-        this.setState({
-          newName: '',
-          newNumber: ''
-        })
-        alert("Tämä nimi on jo olemassa! Kirjoita jokin toinen nimi.");
+      
+        axios
+        .post('http://localhost:3001/persons', noteObject)
+          .then(response => {
+            console.log("axios post response", response)
+            this.setState( {newName: '', newNumber: ''})
+            console.log("this.setstate ajettu persons", this.state.persons)
+           
+            const noteObject = {
+              name: response.data.name,
+              number: response.data.number,
+              id: this.state.persons.length + 1
+              }
+              
+             this.setState ( {persons: this.state.persons.concat(noteObject)} )
+              
+          })
       }
-       
+
+ /* componentDidUpdate() {
+
+
+    console.log('componentDidUpdate')
+
+
   }
-
-
+*/
   handleChanges = (event) => {
 
     console.log("event.target.value", event.target.name)
@@ -236,7 +231,7 @@ class App extends React.Component {
 
 
   render() {
-
+    //console.log("props", this.props)
     const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
 
     return (
