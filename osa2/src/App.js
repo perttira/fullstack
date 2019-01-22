@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import noteService from './services/notes'
 import Kurssi from './components/Kurssi'
 import Otsikko from './components/Otsikko'
 import Yhteensa from './components/Yhteensa'
@@ -164,8 +165,8 @@ class App extends React.Component {
   componentDidMount() {
     console.log('did mount')
 
-    axios
-      .get('http://localhost:3001/db')
+    noteService
+    .getAll()
       .then(response => {
         console.log("axios get response", response)
 
