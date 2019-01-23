@@ -1,8 +1,12 @@
 import React from 'react'
 
-const Henkilot = ({ name, number }) => {
+const Henkilot = ({ name, id, number, onClick }) => {
+  console.log("Henkilot id", id)
+
   return (
-    <li>{name} {number}</li>
+    <div>
+      <li>{name} {number} <button onClick={onClick}>Poista henkilö</button></li> 
+    </div>
   )
 }
 

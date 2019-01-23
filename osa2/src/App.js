@@ -149,6 +149,7 @@ export default App;
 //    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2 &
 //    2.8 puhelinluettelo osa 3 & 2.9* puhelinluettelo osa 4
 //    & 2.10 puhelinluettelo osa 5 & 2.11 osa 6 & 2.14 puhelinluettelo osa 7
+//    & 2.15 puhelinluettelo osa 8
 
 class App extends React.Component {
   constructor(props) {
@@ -166,51 +167,57 @@ class App extends React.Component {
     console.log('did mount')
 
     noteService
-    .getAll()
-      .then(response => {
-        console.log("axios get response", response)
+      .getAll()
+        .then(response => {
+          console.log("axios get response", response)
 
-       let mapattuPersons = response.data['persons'].map((person) => person)
-       this.setState({ persons: mapattuPersons })
-       this.setState({filtteroi: mapattuPersons })
+          let mapattuPersons = response.data['persons'].map((person) => person)
+          this.setState({ persons: mapattuPersons })
+          this.setState({filtteroi: mapattuPersons })
       })
   }
 
        
-      addNote = (event) => {
-        event.preventDefault()
-        const noteObject = {
-          name: this.state.newName,
-          number: this.state.newNumber,
+  addPerson = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      name: this.state.newName,
+      number: this.state.newNumber,
          // important: Math.random() > 0.5
-        }
+    }
       
-        axios
-        .post('http://localhost:3001/persons', noteObject)
-          .then(response => {
-            console.log("axios post response", response)
-            this.setState( {newName: '', newNumber: ''})
-            console.log("this.setstate ajettu persons", this.state.persons)
+    axios
+      .post('http://localhost:3001/persons', noteObject)
+        .then(response => {
+          console.log("axios post response", response)
+          this.setState( {newName: '', newNumber: ''})
+          console.log("addPerson() this.state.persons", this.state.persons)
            
-            const noteObject = {
-              name: response.data.name,
-              number: response.data.number,
-              id: this.state.persons.length + 1
-              }
-              
-             this.setState ( {persons: this.state.persons.concat(noteObject)} )
-              
+          const noteObject = {
+            name: response.data.name,
+            number: response.data.number,
+            id: this.state.persons.length + 1
+          }
+            this.setState ( {persons: this.state.persons.concat(noteObject)} )
           })
-      }
+    }
 
- /* componentDidUpdate() {
+  deletePerson = (id) => {
+    
+    console.log("deletePerson id", id)
 
+    if (window.confirm("Do you really want to remove this person?")) { 
+      noteService
+      .remove(id)
+      .then(response => {
 
-    console.log('componentDidUpdate')
+        this.setState({persons: this.state.persons.filter(elem => elem.id !== id)})
 
-
+    })
+    }
+    
   }
-*/
+
   handleChanges = (event) => {
 
     console.log("event.target.value", event.target.name)
@@ -234,14 +241,14 @@ class App extends React.Component {
   render() {
     //console.log("props", this.props)
     const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
-
+  
     return (
       <div>
         <h1>Puhelinluettelo</h1>
         <label>rajaa näytettäviä </label>
-          <Rajaa name="filter" value={this.state.filter} onChange={this.handleChanges} persons={this.state.persons}/>
+        <Rajaa name="filter" value={this.state.filter} onChange={this.handleChanges} persons={this.state.persons}/>
         <h1>Lisää uusi</h1>
-        <form onSubmit={this.addNote}>
+        <form onSubmit={this.addPerson}>
           <label>nimi: </label><input name="newName" value={this.state.newName} 
             onChange={this.handleChanges}/>
             <br/>
@@ -250,11 +257,10 @@ class App extends React.Component {
             <br/>
           <button type="submit">tallenna</button>
         </form>
-        <h1>Numerot</h1>
-        <ul>
-        {filtteroi.map(person => <Henkilot key={person.id} name={person.name} number={person.number}/>)}
-
-        </ul>
+          <h1>Numerot</h1>
+          <ul>
+            {filtteroi.map(person => <Henkilot key={person.id} id={person.id} name={person.name} number={person.number} onClick={() => this.deletePerson(person.id)}/>)}
+          </ul>
       </div>
     )
   }
