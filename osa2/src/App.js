@@ -149,7 +149,8 @@ export default App;
 //    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2 &
 //    2.8 puhelinluettelo osa 3 & 2.9* puhelinluettelo osa 4
 //    & 2.10 puhelinluettelo osa 5 & 2.11 osa 6 & 2.14 puhelinluettelo osa 7
-//    & 2.15 puhelinluettelo osa 8
+//    & 2.15 puhelinluettelo osa 8 & 2.16 puhelinluettelo osa 9
+
 
 class App extends React.Component {
   constructor(props) {
@@ -163,60 +164,99 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    console.log('did mount')
+componentDidMount() {
+  console.log('did mount')
+  noteService
+    .getAll()
+    .then(response => {
+      console.log("axios get response", response)
+      let mapattuPersons = response.data.map((person) => person)
+      console.log("mapattuPersons", mapattuPersons)
 
-    noteService
-      .getAll()
-        .then(response => {
-          console.log("axios get response", response)
-
-          let mapattuPersons = response.data['persons'].map((person) => person)
-          this.setState({ persons: mapattuPersons })
-          this.setState({filtteroi: mapattuPersons })
-      })
-  }
+      this.setState({ persons: mapattuPersons })
+      this.setState({filtteroi: mapattuPersons })
+    })
+}
 
        
-  addPerson = (event) => {
-    event.preventDefault()
-    const noteObject = {
-      name: this.state.newName,
-      number: this.state.newNumber,
-         // important: Math.random() > 0.5
-    }
-      
-    axios
-      .post('http://localhost:3001/persons', noteObject)
-        .then(response => {
-          console.log("axios post response", response)
-          this.setState( {newName: '', newNumber: ''})
-          console.log("addPerson() this.state.persons", this.state.persons)
-           
-          const noteObject = {
-            name: response.data.name,
-            number: response.data.number,
-            id: this.state.persons.length + 1
-          }
-            this.setState ( {persons: this.state.persons.concat(noteObject)} )
-          })
-    }
+addPerson = (event) => {
+  event.preventDefault()
+  const noteObject = {
+    name: this.state.newName,
+    number: this.state.newNumber,
+  }
+  console.log("addPerson noteobject", noteObject)
 
-  deletePerson = (id) => {
+  console.log("addPerson persons", this.state.persons)
+
+  let nameFound = false
+  var paivitettavanId
+  
+  this.state.persons.forEach(element => {
+    console.log("addPerson foreach element.name", element.name)
+    console.log("addPerson foreach  element.id", element.id)
+
+    console.log("addPerson foreach  noteObject.name", noteObject.name)
+
+    if (element.name === noteObject.name) {
+      console.log("if element", element)
+      console.log("if element.id", element.id)
+
+      console.log("nameFound")
+      nameFound = true
+      paivitettavanId = element.id
+    }
     
-    console.log("deletePerson id", id)
+  })
+  console.log("nameFound ennen iffiä", nameFound)
 
-    if (window.confirm("Do you really want to remove this person?")) { 
-      noteService
+  if (nameFound && window.confirm("Henkilö on jo olemassa. Haluatko päivittää henkilön tiedot?")) {
+    console.log("TRUE && TRUE")
+    console.log("paivitettavanId", paivitettavanId)
+
+    noteService
+    .update(paivitettavanId,noteObject)
+    .then(response => {
+      console.log("axios post response", response)
+      this.setState( {newName: '', newNumber: ''})
+
+      const noteObject = {
+        name: response.data.name,
+        number: response.data.number,
+        id: paivitettavanId
+      }
+      this.setState ( {persons: this.state.persons.filter(person => person.id === paivitettavanId)} )
+    })
+
+  }else{
+     noteService
+      .create(noteObject)
+      .then(response => {
+        console.log("axios post response create", response)
+        this.setState( {newName: '', newNumber: ''})
+
+        const noteObject = {
+          name: response.data.name,
+          number: response.data.number,
+          id: this.state.persons.length + 1
+        }
+        this.setState ( {persons: this.state.persons.concat(noteObject)} )
+      })
+  }
+}
+
+deletePerson = (id) => {
+  console.log("deletePerson id", id)
+
+  if (window.confirm("Do you really want to remove this person?")) { 
+    noteService
       .remove(id)
       .then(response => {
-
+        // Tekee uuden taulukon joka ei sisällä id:n omaavaa henkilöä
         this.setState({persons: this.state.persons.filter(elem => elem.id !== id)})
-
-    })
-    }
-    
+      })
   }
+}
 
   handleChanges = (event) => {
 
