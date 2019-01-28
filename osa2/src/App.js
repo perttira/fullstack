@@ -164,33 +164,32 @@ class App extends React.Component {
     }
   }
 
+
 componentDidMount() {
-  console.log('did mount')
+
   noteService
     .getAll()
     .then(response => {
       console.log("axios get response", response)
       let mapattuPersons = response.data.map((person) => person)
-      console.log("mapattuPersons", mapattuPersons)
-
       this.setState({ persons: mapattuPersons })
       this.setState({filtteroi: mapattuPersons })
     })
+
 }
 
        
 addPerson = (event) => {
+
   event.preventDefault()
+  
+  let nameFound = false
+  
   const noteObject = {
     name: this.state.newName,
     number: this.state.newNumber,
   }
-  console.log("addPerson noteobject", noteObject)
 
-  console.log("addPerson persons", this.state.persons)
-
-  let nameFound = false
-  
   // käydään persons taulukko läpi ja katsotaan löytyykö samannimistä henkilöä
   this.state.persons.forEach(element => {
     if (element.name === noteObject.name) {
@@ -205,22 +204,19 @@ addPerson = (event) => {
     noteService
     .update(noteObject.id ,noteObject)
     .then(response => {
-      console.log("axios post response", response)
       this.setState( {newName: '', newNumber: ''})
-
-      //Etsi päivitettävä henkilö persons taulukosta ja päivitä sen tiedot
+      //Etsitään päivitettävä henkilö persons taulukosta ja päivitetään sen tiedot
       this.state.persons.forEach(element => {
         if (element.name === noteObject.name) {
           element.number = noteObject.number
         }
       })
-
+      //päivitetään selaimen näkymä päivittämällä filter
       this.setState({filter: ''})
-      console.log("addPerson (update) filterin jälkeinen persons", this.state.persons)
-
     })
 
   }else{
+
      noteService
       .create(noteObject)
       .then(response => {
@@ -234,47 +230,47 @@ addPerson = (event) => {
         }
         this.setState ( {persons: this.state.persons.concat(noteObject)} )
       })
+
   }
+
 }
 
-deletePerson = (id) => {
-  console.log("deletePerson id", id)
 
+deletePerson = (id) => {
+  
   if (window.confirm("Do you really want to remove this person?")) { 
     noteService
       .remove(id)
       .then(response => {
         // Tekee uuden taulukon joka ei sisällä id:n omaavaa henkilöä
         this.setState({persons: this.state.persons.filter(elem => elem.id !== id)})
-        console.log("deletePerson filterin jälkeinen persons", this.state.persons)
-
       })
   }
+
 }
 
-  handleChanges = (event) => {
 
-    console.log("event.target.value", event.target.name)
-    console.log("this.state[newName]", this.state["newName"])
+handleChanges = (event) => {
 
-    if(event.target.name === "newName"){
-      this.setState({ newName: event.target.value })
-    }else if (event.target.name === "newNumber") {
-      this.setState({ newNumber: event.target.value })
-    }else{
-      this.setState({ filter: event.target.value })
-    }
+  if(event.target.name === "newName"){
+    this.setState({ newName: event.target.value })
+  }else if (event.target.name === "newNumber") {
+    this.setState({ newNumber: event.target.value })
+  }else{
+    this.setState({ filter: event.target.value })
   }
 
-
-  toggleVisible = () => {
-    this.setState({showAll: !this.state.showAll})
-  }
+}
 
 
-  render() {
+toggleVisible = () => {
+  this.setState({showAll: !this.state.showAll})
+}
+
+
+render() {
     //console.log("props", this.props)
-    //const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
+    const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
   
     return (
       <div>
@@ -293,7 +289,7 @@ deletePerson = (id) => {
         </form>
           <h1>Numerot</h1>
           <ul>
-            {this.state.persons.map(person => <Henkilot key={person.id} id={person.id} name={person.name} number={person.number} onClick={() => this.deletePerson(person.id)}/>)}
+            {filtteroi.map(person => <Henkilot key={person.id} id={person.id} name={person.name} number={person.number} onClick={() => this.deletePerson(person.id)}/>)}
           </ul>
       </div>
     )
