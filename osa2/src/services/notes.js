@@ -12,6 +12,7 @@ const create = (newObject) => {
 
 // TODO tässä jotain vikaa, ei päivitä oikeaa ID:tä. Toisella persons päivityskierroksella id:t menee sekaisin?
 const update = (id, newObject) => {
+  newObject.id = ''
   console.log("${baseUrl + persons}/${id}", `${baseUrl + "persons"}/${id}`)
   return axios.put(`${baseUrl + "persons"}/${id}`, newObject)
 }

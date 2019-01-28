@@ -190,42 +190,34 @@ addPerson = (event) => {
   console.log("addPerson persons", this.state.persons)
 
   let nameFound = false
-  var paivitettavanId
   
+  // käydään persons taulukko läpi ja katsotaan löytyykö samannimistä henkilöä
   this.state.persons.forEach(element => {
-    console.log("addPerson foreach element.name", element.name)
-    console.log("addPerson foreach  element.id", element.id)
-
-    console.log("addPerson foreach  noteObject.name", noteObject.name)
-
     if (element.name === noteObject.name) {
-      console.log("if element", element)
-      console.log("if element.id", element.id)
-
-      console.log("nameFound")
       nameFound = true
-      paivitettavanId = element.id
+      noteObject.id = element.id
     }
-    
   })
-  console.log("nameFound ennen iffiä", nameFound)
 
+  // tarkistetaan löytyikö samannimistä päivitettävää henkilöä ja onko käyttäjä painanut OK
   if (nameFound && window.confirm("Henkilö on jo olemassa. Haluatko päivittää henkilön tiedot?")) {
-    console.log("TRUE && TRUE")
-    console.log("paivitettavanId", paivitettavanId)
-
+ 
     noteService
-    .update(paivitettavanId,noteObject)
+    .update(noteObject.id ,noteObject)
     .then(response => {
       console.log("axios post response", response)
       this.setState( {newName: '', newNumber: ''})
 
-      const noteObject = {
-        name: response.data.name,
-        number: response.data.number,
-        id: paivitettavanId
-      }
-      this.setState ( {persons: this.state.persons.filter(person => person.id === paivitettavanId)} )
+      //Etsi päivitettävä henkilö persons taulukosta ja päivitä sen tiedot
+      this.state.persons.forEach(element => {
+        if (element.name === noteObject.name) {
+          element.number = noteObject.number
+        }
+      })
+
+      this.setState({filter: ''})
+      console.log("addPerson (update) filterin jälkeinen persons", this.state.persons)
+
     })
 
   }else{
@@ -238,7 +230,7 @@ addPerson = (event) => {
         const noteObject = {
           name: response.data.name,
           number: response.data.number,
-          id: this.state.persons.length + 1
+          id: response.data.id
         }
         this.setState ( {persons: this.state.persons.concat(noteObject)} )
       })
@@ -254,6 +246,8 @@ deletePerson = (id) => {
       .then(response => {
         // Tekee uuden taulukon joka ei sisällä id:n omaavaa henkilöä
         this.setState({persons: this.state.persons.filter(elem => elem.id !== id)})
+        console.log("deletePerson filterin jälkeinen persons", this.state.persons)
+
       })
   }
 }
@@ -280,7 +274,7 @@ deletePerson = (id) => {
 
   render() {
     //console.log("props", this.props)
-    const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
+    //const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
   
     return (
       <div>
@@ -299,7 +293,7 @@ deletePerson = (id) => {
         </form>
           <h1>Numerot</h1>
           <ul>
-            {filtteroi.map(person => <Henkilot key={person.id} id={person.id} name={person.name} number={person.number} onClick={() => this.deletePerson(person.id)}/>)}
+            {this.state.persons.map(person => <Henkilot key={person.id} id={person.id} name={person.name} number={person.number} onClick={() => this.deletePerson(person.id)}/>)}
           </ul>
       </div>
     )
