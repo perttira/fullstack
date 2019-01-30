@@ -161,10 +161,11 @@ class App extends React.Component {
       newName: '',
       newNumber: '',
       filter: '',
+      error: null
     }
   }
-
-
+  
+  
 componentDidMount() {
 
   noteService
@@ -174,6 +175,15 @@ componentDidMount() {
       let mapattuPersons = response.data.map((person) => person)
       this.setState({ persons: mapattuPersons })
       this.setState({filtteroi: mapattuPersons })
+    })
+    
+    .catch(error => {
+      this.setState({
+        error: `Tietokantaan ei saatu yhteyttä 404 NOT FOUND`,
+      })
+      setTimeout(() => {
+        this.setState({error: null})
+      }, 5000)
     })
 
 }
@@ -210,9 +220,52 @@ addPerson = (event) => {
         if (element.name === noteObject.name) {
           element.number = noteObject.number
         }
-      })
+      })        
       //päivitetään selaimen näkymä päivittämällä filter
       this.setState({filter: ''})
+    })
+
+    .catch(error => {
+      this.setState({
+        error: `Päivitettävää henkilöä ei löytynyt enää tietokannasta 404 NOT FOUND. Lisätään henkilö uudestaan tietokantaan.`,
+      })
+      // Päivitettävää henkilöä ei löytynyt, joten luodaan se tietokantaan
+      noteService
+      .create(noteObject)
+      .then(response => {
+        this.setState( {newName: '', newNumber: ''})
+        console.log("axios post response create", response)
+
+        const noteObject = {
+          name: response.data.name,
+          number: response.data.number,
+          id: response.data.id
+        }
+
+        this.state.persons.forEach(element => {
+          if (element.name === noteObject.name) {
+            
+            element.number = noteObject.number
+            
+          }
+        })
+        //this.setState ( {persons: this.state.persons.concat(noteObject)} )
+        
+      })
+      
+      .catch(error => {
+        this.setState({
+          error: `Jotain meni pieleen. Henkilötietoa ei pystytty luomaan.`,
+        })
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 5000)
+      })
+      
+      setTimeout(() => {
+        this.setState({error: null})
+      }, 5000)
+    
     })
 
   }else{
@@ -220,15 +273,25 @@ addPerson = (event) => {
      noteService
       .create(noteObject)
       .then(response => {
-        console.log("axios post response create", response)
         this.setState( {newName: '', newNumber: ''})
+        console.log("axios post response create", response)
 
         const noteObject = {
           name: response.data.name,
           number: response.data.number,
           id: response.data.id
         }
+
         this.setState ( {persons: this.state.persons.concat(noteObject)} )
+      })
+      
+      .catch(error => {
+        this.setState({
+          error: `Jotain meni pieleen. Henkilötietoa ei luotu.`,
+        })
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 5000)
       })
 
   }
@@ -243,8 +306,19 @@ deletePerson = (id) => {
       .remove(id)
       .then(response => {
         // Tekee uuden taulukon joka ei sisällä id:n omaavaa henkilöä
+        console.log("deletePerson response", response)
         this.setState({persons: this.state.persons.filter(elem => elem.id !== id)})
       })
+
+      .catch(error => {
+        this.setState({
+          error: `Henkilöä ei löytynyt tietokannasta`,
+        })
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 5000)
+      })
+
   }
 
 }
@@ -276,8 +350,9 @@ render() {
       <div>
         <h1>Puhelinluettelo</h1>
         <label>rajaa näytettäviä </label>
-        <Rajaa name="filter" value={this.state.filter} onChange={this.handleChanges} persons={this.state.persons}/>
+          <Rajaa name="filter" value={this.state.filter} onChange={this.handleChanges} persons={this.state.persons}/>
         <h1>Lisää uusi</h1>
+          <Notification message={this.state.error}/>
         <form onSubmit={this.addPerson}>
           <label>nimi: </label><input name="newName" value={this.state.newName} 
             onChange={this.handleChanges}/>
@@ -300,6 +375,17 @@ const Rajaa = (props) => {
   return (
     <div>
       <input name={props.name} value={props.value}  onChange={props.onChange}/>
+    </div>
+  )
+}
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className="error">
+      {message}
     </div>
   )
 }
