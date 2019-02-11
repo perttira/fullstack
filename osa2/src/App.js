@@ -343,7 +343,7 @@ toggleVisible = () => {
 
 
 render() {
-    //console.log("props", this.props)
+    //console.log("props", this.props) kissa
     const filtteroi = this.state.persons.filter(person => person.name.startsWith(this.state.filter))
   
     return (

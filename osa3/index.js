@@ -1,38 +1,78 @@
 const http = require('http')
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+// 3.1 puhelinluettelon backend osa 1 & 3.2 puhelinluettelon backend osa 2
+
+
+
+app.use(bodyParser.json())
 
 let notes = [
     {
-      id: 1,
-      content: 'HTML on helppoa',
-      date: '2017-12-10T17:30:31.098Z',
-      important: true
+      name: 'Kimmo Koskenkorva',
+      number: '050-6667778',
+      id: 1
     },
     {
-      id: 2,
-      content: 'Selain pystyy suorittamaan vain javascriptiä',
-      date: '2017-12-10T18:39:34.091Z',
-      important: false
+      name: 'Mauri Muntteri',
+      number: '040-4566543',
+      id: 1
     },
     {
-      id: 3,
-      content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
-      date: '2017-12-10T19:20:14.298Z',
-      important: true
+      name: 'Liisa Laudrup',
+      number: '044-0451500',
+      id: 1
     }
   ]
   
   app.get('/notes/:id', (request, response) => {
-    const id = request.params.id
+    const id = Number(request.params.id)
     console.log(id)
     const note = notes.find(note => note.id === id)
     console.log(note)
-    response.json(note)
+    
+    if ( note ) {
+      response.json(note)
+    } else {
+      response.status(404).end()
+    }
   })
   
-  app.get('/notes', (req, res) => {
+  app.delete('/notes/:id', (request, response) => {
+    const id = Number(request.params.id)
+    notes = notes.filter(note => note.id !== id)
+  
+    response.status(204).end()
+  })
+  
+  app.get('/api/notes', (req, res) => {
     res.json(notes)
+  })
+
+  const generateId = () => {
+    const maxId = notes.length > 0 ? notes.map(n => n.id).sort((a,b) => a - b).reverse()[0] : 1
+    return maxId + 1
+  }
+  
+  app.post('/notes', (request, response) => {
+    const body = request.body
+  
+    if (body.content === undefined) {
+      return response.status(400).json({error: 'content missing'})
+    }
+  
+    const note = {
+      content: body.content,
+      important: body.important|| false,
+      date: new Date(),
+      id: generateId()
+    }
+  
+    notes = notes.concat(note)
+  
+    response.json(note)
   })
   
   const PORT = 3001
