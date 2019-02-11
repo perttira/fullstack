@@ -149,7 +149,10 @@ export default App;
 //    OSA 2 2.6 puhelinluettelo osa 1 & OSA 2.7 puhelinluettelo osa 2 &
 //    2.8 puhelinluettelo osa 3 & 2.9* puhelinluettelo osa 4
 //    & 2.10 puhelinluettelo osa 5 & 2.11 osa 6 & 2.14 puhelinluettelo osa 7
-//    & 2.15 puhelinluettelo osa 8 & 2.16 puhelinluettelo osa 9
+//    & 2.15 puhelinluettelo osa 8 & 2.16 puhelinluettelo osa 9 && 2.17* puhelinluettelo osa 10
+//    2.18 puhelinluettelo osa 11 && 2.19* puhelinluettelo osa 12
+
+
 
 
 class App extends React.Component {
