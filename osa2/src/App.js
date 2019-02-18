@@ -176,6 +176,7 @@ componentDidMount() {
     .then(response => {
       console.log("axios get response", response)
       let mapattuPersons = response.data.map((person) => person)
+      console.log('mapattuPersons', mapattuPersons);
       this.setState({ persons: mapattuPersons })
       this.setState({filtteroi: mapattuPersons })
     })
@@ -193,9 +194,8 @@ componentDidMount() {
 
        
 addPerson = (event) => {
-
-  event.preventDefault()
   
+  event.preventDefault()
   let nameFound = false
   
   const noteObject = {
@@ -210,23 +210,26 @@ addPerson = (event) => {
       noteObject.id = element.id
     }
   })
-
+  console.log('updatePerson()');
   // tarkistetaan löytyikö samannimistä päivitettävää henkilöä ja onko käyttäjä painanut OK
   if (nameFound && window.confirm("Henkilö on jo olemassa. Haluatko päivittää henkilön tiedot?")) {
- 
     noteService
-    .update(noteObject.id ,noteObject)
+    .update(noteObject)
     .then(response => {
       this.setState( {newName: '', newNumber: ''})
-      //Etsitään päivitettävä henkilö persons taulukosta ja päivitetään sen tiedot
-      this.state.persons.forEach(element => {
-        if (element.name === noteObject.name) {
-          element.number = noteObject.number
+      console.log("axios put response update", response)
+//TODO
+      this.setState ({ persons: this.state.persons.map(function(person){
+        if(person.name === noteObject.name) {
+          person.number = noteObject.number
         }
-      })        
-      //päivitetään selaimen näkymä päivittämällä filter
-      this.setState({filter: ''})
-    })
+        return person
+      })
+  })
+      // TODO etsi noteObject nimen perusteella persons taulukosta ja päivitä sen numero, id pysyy samana
+
+      console.log("addPerson() this.state.persons", this.state.persons)
+    }) //then
 
     .catch(error => {
       this.setState({
@@ -239,21 +242,14 @@ addPerson = (event) => {
         this.setState( {newName: '', newNumber: ''})
         console.log("axios post response create", response)
 
-        const noteObject = {
+        let tempNoteObject = {
           name: response.data.name,
           number: response.data.number,
           id: response.data.id
         }
-
-        this.state.persons.forEach(element => {
-          if (element.name === noteObject.name) {
-            
-            element.number = noteObject.number
-            
-          }
-        })
-        //this.setState ( {persons: this.state.persons.concat(noteObject)} )
-        
+        console.log('KASFAFSA');
+        this.setState({persons: this.state.persons.filter(person => person.name != tempNoteObject.name)})
+        this.setState ( {persons: this.state.persons.concat(tempNoteObject)} )
       })
       
       .catch(error => {
@@ -270,6 +266,7 @@ addPerson = (event) => {
       }, 5000)
     
     })
+    
 
   }else{
 
@@ -279,13 +276,13 @@ addPerson = (event) => {
         this.setState( {newName: '', newNumber: ''})
         console.log("axios post response create", response)
 
-        const noteObject = {
-          name: response.data.name,
+        const tempNoteObject = {
+          name: noteObject.name,
           number: response.data.number,
           id: response.data.id
         }
 
-        this.setState ( {persons: this.state.persons.concat(noteObject)} )
+        this.setState ( {persons: this.state.persons.concat(tempNoteObject)} )
       })
       
       .catch(error => {
@@ -297,9 +294,22 @@ addPerson = (event) => {
         }, 5000)
       })
 
-  }
+  
+  } //if
+        //this.setState ( {persons: this.state.persons.concat(noteObject)} )
+      
+    
+  
 
-}
+      //päivitetään selaimen näkymä päivittämällä filter
+      //this.setState({filter: ''})
+    
+
+
+
+
+} //addPerson
+
 
 
 deletePerson = (id) => {
