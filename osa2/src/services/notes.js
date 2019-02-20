@@ -1,7 +1,12 @@
 import axios from 'axios'
 
 // Vaihda baseUrl jos haluat ottaa muihin tietokantoihin yhteyttä (osa3 ja heroku)
-const baseUrl = 'http://localhost:3001/api/persons'
+
+/* localhost paitsi nyt proxy päällä package.json -tiedostossa */
+//const baseUrl = 'http://localhost:3001/api/persons'
+
+/* heroku */
+const baseUrl = '/api/persons'
 
 const getAll = () => {
   return axios.get(baseUrl)
