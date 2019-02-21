@@ -6,27 +6,48 @@ if ( process.argv.length<3 ) {
 }
 
 const password = process.argv[2]
+const name = process.argv[3]
+const number = process.argv[4]
+// print process.argv
+process.argv.forEach((val, index) => {
+  console.log(`${index}: ${val}`);
+})
 
 const url =
-  `mongodb+srv://perttira:${password}@pessi-rx9a5.mongodb.net/test?retryWrites=true`
 
 mongoose.connect(url, { useNewUrlParser: true })
 
 const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
+  name: String,
+  number: String
+  //important: Boolean,
 })
 
-const Note = mongoose.model('Note', noteSchema)
+const Person = mongoose.model('Person', noteSchema)
 
-const note = new Note({
-  content: 'HTML on helppoa',
-  date: new Date(),
-  important: true,
+const person = new Person({
+  name: name,
+  number: number,
+  //important: true,
 })
 
-note.save().then(response => {
-  console.log('note saved!');
-  mongoose.connection.close();
-})
+
+if(process.argv.length > 3) {
+  // metodi tallettaa personin mongodb tietokantaan
+  // Metodi palauttaa promisen
+  // jolle voidaan rekisteröidä then-metodin avulla tapahtumankäsittelijä
+  person.save().then(response => {
+    console.log('person saved!')
+    console.log("Lisätään " + response.name + " numero " + response.number + " luetteloon")
+    mongoose.connection.close();
+  })
+}else{
+  // tulostetaan kaikki personit mongodb tietokannasta
+  Person.find({}).then(result => {
+    console.log("Puhelinluettelo:")
+    result.forEach(person => {
+      console.log(person.name ,person.number)
+    })
+    mongoose.connection.close()
+  })
+} //if else
