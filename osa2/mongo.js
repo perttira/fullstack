@@ -14,6 +14,7 @@ process.argv.forEach((val, index) => {
 })
 
 const url =
+  `mongodb+srv://perttira:${password}@pessi-rx9a5.mongodb.net/fullstack?retryWrites=true`
 
 mongoose.connect(url, { useNewUrlParser: true })
 
