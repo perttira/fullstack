@@ -254,7 +254,7 @@ addPerson = (event) => {
       
       .catch(error => {
         this.setState({
-          error: `Jotain meni pieleen. Henkilötietoa ei pystytty luomaan.`,
+          error: `Jotain meni pieleen. Henkilötietoa ei pystytty luomaan.`
         })
         setTimeout(() => {
           this.setState({error: null})
@@ -283,8 +283,17 @@ addPerson = (event) => {
         }
 
         this.setState ( {persons: this.state.persons.concat(tempNoteObject)} )
+      }).catch(error => {
+        this.setState({
+          //error.response.data on backendin schema validatorin lähettämä virheilmoitus(olio?)
+          error: error.response.data.error,
+        })
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 5000)
       })
       
+      /*
       .catch(error => {
         this.setState({
           error: `Jotain meni pieleen. Henkilötietoa ei luotu.`,
@@ -293,6 +302,7 @@ addPerson = (event) => {
           this.setState({error: null})
         }, 5000)
       })
+      */
 
   
   } //if
