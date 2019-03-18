@@ -14,16 +14,24 @@ const totalLikes = (blogs) => {
 }
 
 var likes = 0
+var opjekti = {}
 
 const mostLikes = (blogs) => {
   blogs.map(function(sum ) {
 
     if(sum.likes > likes) {
       likes = sum.likes
+      opjekti.title = sum.title
+      opjekti.author = sum.author
+      opjekti.likes = sum.likes
       console.log('mostlLikes', likes)
+      console.log('opjekti', opjekti)
+
+
     }
   })
-  return likes
+  return opjekti
+
 }
 
 module.exports = {
