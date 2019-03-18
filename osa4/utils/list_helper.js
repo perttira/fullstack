@@ -13,7 +13,21 @@ const totalLikes = (blogs) => {
   },0)
 }
 
+var likes = 0
+
+const mostLikes = (blogs) => {
+  blogs.map(function(sum ) {
+
+    if(sum.likes > likes) {
+      likes = sum.likes
+      console.log('mostlLikes', likes)
+    }
+  })
+  return likes
+}
+
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  mostLikes
 }

@@ -11,5 +11,5 @@ server.listen(config.PORT, () => {
 
 // OSA4 tehtävät 4.1 blogilista, step1  4.2 blogilista, step2
 // 4.3: apufunktioita ja yksikkötestejä, step1 && 4.4: apufunktioita ja yksikkötestejä, step2
-
+// 4.5*: apufunktioita ja yksikkötestejä, step3
 
