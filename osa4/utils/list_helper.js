@@ -27,16 +27,6 @@ const mostLikes = (blogs) => {
 }
 
 
-/*    if(sum.likes > likes) {
-      likes = sum.likes
-      authorObject.title = sum.title
-      authorObject.author = sum.author
-      authorObject.likes = sum.likes
-      console.log('mostlLikes', likes)
-      console.log('opjekti', authorObject)
-      */
-
-
 const mostBlogs = (blogs) => {
 
   const arrayOfAuthors = []
@@ -69,27 +59,51 @@ const mostBlogs = (blogs) => {
 }
 
 
+const mostBlogLikes = (blogs) => {
+
+  const arrayOfAuthors = []
+  console.log('KOIRA', arrayOfAuthors)
+
+  blogs.map(function(blog) {
+
+    // katsotaan esiintyykö blogi aputaulukossa arrayOfAuthors, jos ei niin talletetaan blogaajan
+    // nimi authorObject-olion author attribuutiksi. Lasketaan myös montako kertaa blogaaja esiintyy blogs-taulukossa ja
+    // talletetaan esiintymiskerrat authorObject-olion blogeja attribuutiksi ja talletetaan authorObject olio arrayOfAuthors
+    // taulukkoon
+    let uusTaulukko = arrayOfAuthors.filter(nimi => {
+      if(nimi.author === blog.author) {
+        nimi.likes = nimi.likes + blog.likes
+      }
+      return nimi.author === blog.author
+    })
+    console.log('uusTaulukko', uusTaulukko)
+    // arrayOfAuthors taulukossa ei ollut blogaajan nimeä
+    if (uusTaulukko.length === 0) {
+      let authorObject = {}
+      authorObject.author = blog.author
+      authorObject.likes = blog.likes
+      //authorObject.blogeja = blogs.filter(nimi => nimi.author === blog.author).length
+      arrayOfAuthors.push(authorObject)
+    }
+  })
+  var palautettava
+  let suurin = 0
+  // etsitään blogaaja jolla on eniten blogeja
+  arrayOfAuthors.map(function(blogaaja)  {
+    if (blogaaja.likes >= suurin) {
+      suurin = blogaaja.likes
+      palautettava = blogaaja
+    }
+  })
+  console.log('PALAUTETTAVA', palautettava)
+  return palautettava
+}
+
+
 module.exports = {
   dummy,
   totalLikes,
   mostLikes,
-  mostBlogs
+  mostBlogs,
+  mostBlogLikes
 }
-
-/*
-      console.log('arrayOfAuthors', arrayOfAuthors)
-      console.log('blogs.author ', blog.author)
-      console.log('authors ', authors)
-
-
-if(authorsTwo.author === blog.author){
-          console.log('IFFISSÄ')
-          authorsTwo.blogs = authors.blogs + 1
-          return
-        }
-        console.log('ELSESSÄ')
-        authorObject.author = blog.author
-        //authorObject.blogs = authorObject.blogs +1
-        arrayOfAuthors.push(authorObject)
-      })
-      */
