@@ -1,6 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-var blogArray
+var blogArray = []
 
 // osa4 4.1 blogilista, step1 && 4.2 blogilista, step2
 
@@ -10,6 +10,7 @@ var blogArray
  * @return {!Array<TYPE>}
  * @template TYPE
  */
+
 blogsRouter.get('/', (request, response) => {
 
   Blog.find({}).then(blogs => {
@@ -18,6 +19,13 @@ blogsRouter.get('/', (request, response) => {
     response.json(blogArray)
   })
 })
+
+/*
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(blogs.map(blog => blog.toJSON()))
+})
+/*
 
 /*   */
 blogsRouter.post('/', (request, response, next) => {
@@ -30,7 +38,6 @@ blogsRouter.post('/', (request, response, next) => {
     url: body.url,
     likes: body.likes
   })
-
 
   blogArray = blogArray.concat(blog)
 
