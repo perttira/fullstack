@@ -11,6 +11,7 @@ var blogArray = []
  * @template TYPE
  */
 
+ /*
 blogsRouter.get('/', (request, response) => {
 
   Blog.find({}).then(blogs => {
@@ -19,13 +20,14 @@ blogsRouter.get('/', (request, response) => {
     response.json(blogArray)
   })
 })
+*/
 
-/*
+
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})
   response.json(blogs.map(blog => blog.toJSON()))
 })
-/*
+
 
 /*   */
 blogsRouter.post('/', (request, response, next) => {
