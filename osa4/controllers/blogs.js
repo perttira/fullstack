@@ -11,7 +11,7 @@ var blogArray = []
  * @template TYPE
  */
 
- /*
+/*
 blogsRouter.get('/', (request, response) => {
 
   Blog.find({}).then(blogs => {

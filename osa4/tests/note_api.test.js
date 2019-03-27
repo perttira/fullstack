@@ -35,23 +35,30 @@ test('notes are returned as json', async () => {
 
 test('right amount of notes', async () => {
   const response = await api.get('/api/blogs')
-  expect(response.body.length).toBe(1)
+  expect(response.body.length).toBe(3)
+})
+
+test('blog _id returned as id', async () => {
+  const response = await api.get('/api/blogs')
+  console.log('blog _id returned as id : ', response.body)
+  console.log('blog _id returned as map',response.body.map(blog => blog.id))
+  expect(response.body.map(blog => blog.id)).toBeDefined()
 })
 
 test('the first note is about HTTP methods', async () => {
-  const response = await api.get('/api/notes')
+  const response = await api.get('/api/blogs')
 
   expect(response.body[0].content).toBe('HTML on helppoa')
 })
 
 test('all notes are returned', async () => {
-  const response = await api.get('/api/notes')
+  const response = await api.get('/api/blogs')
 
   expect(response.body.length).toBe(initialNotes.length)
 })
 
 test('a specific note is within the returned notes', async () => {
-  const response = await api.get('/api/notes')
+  const response = await api.get('/api/blogs')
 
   const contents = response.body.map(r => r.content)
 
