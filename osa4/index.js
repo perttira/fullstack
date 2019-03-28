@@ -13,7 +13,8 @@ server.listen(config.PORT, () => {
 // 4.3: apufunktioita ja yksikkötestejä, step1 && 4.4: apufunktioita ja yksikkötestejä, step2
 // 4.5*: apufunktioita ja yksikkötestejä, step3 && 4.6*: apufunktioita ja yksikkötestejä, step4
 // && 4.7*: apufunktioita ja yksikkötestejä, step5 && 4.8: blogilistan testit, step 1
-// 4.9*: blogilistan testit, step2
+// 4.9*: blogilistan testit, step2 && 4.10: blogilistan testit, step3
+
 
 
 

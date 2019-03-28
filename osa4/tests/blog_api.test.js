@@ -6,25 +6,29 @@ const Blog = require('../models/blog')
 
 const initialNotes = [
   {
-    content: 'HTML on helppoa',
-    important: false,
+    'title': 'Saatanalliset Sakeet',
+    'author': 'Panu Loponen',
+    'url': 'www.koira.com',
+    'likes': '888'
   },
   {
-    content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
-    important: true,
+    'title': 'Hitlerin muistelmat',
+    'author': 'Panu Loponen',
+    'url': 'www.google.com',
+    'likes': '888'
   },
 ]
-/*
+
 beforeEach(async () => {
-  await Note.deleteMany({})
+  await Blog.deleteMany({})
 
-  let noteObject = new Note(initialNotes[0])
-  await noteObject.save()
+  let blogObject = new Blog(initialNotes[0])
+  await blogObject.save()
 
-  noteObject = new Note(initialNotes[1])
-  await noteObject.save()
+  blogObject = new Blog(initialNotes[1])
+  await blogObject.save()
 })
-*/
+
 
 test('notes are returned as json', async () => {
   await api
@@ -35,15 +39,38 @@ test('notes are returned as json', async () => {
 
 test('right amount of notes', async () => {
   const response = await api.get('/api/blogs')
-  expect(response.body.length).toBe(3)
+  expect(response.body.length).toBe(2)
 })
 
 test('blog _id returned as id', async () => {
   const response = await api.get('/api/blogs')
-  console.log('blog _id returned as id : ', response.body)
-  console.log('blog _id returned as map',response.body.map(blog => blog.id))
   expect(response.body.map(blog => blog.id)).toBeDefined()
 })
+
+test('adding blog adds blog by one in a right form', async () => {
+
+  let blogObject = {
+    'title': 'Testititle',
+    'author': 'Testi Testinen',
+    'url': 'www.testi.com',
+    'likes': '123'
+  }
+
+  const responsePost = await api.post('/api/blogs').send(blogObject)
+  const responseGetAll = await api.get('/api/blogs')
+  const responseGetOne = await api.get('/api/blogs/' + responsePost.body.id)
+
+  expect(responseGetOne.body).toMatchObject({
+    'title': 'Testititle',
+    'id': responsePost.body.id,
+    'author': 'Testi Testinen',
+    'url': 'www.testi.com',
+    'likes': 123
+  })
+
+  expect(responseGetAll.body.length).toBe(initialNotes.length+1)
+})
+
 
 test('the first note is about HTTP methods', async () => {
   const response = await api.get('/api/blogs')
@@ -53,9 +80,10 @@ test('the first note is about HTTP methods', async () => {
 
 test('all notes are returned', async () => {
   const response = await api.get('/api/blogs')
-
   expect(response.body.length).toBe(initialNotes.length)
 })
+
+
 
 test('a specific note is within the returned notes', async () => {
   const response = await api.get('/api/blogs')

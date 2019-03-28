@@ -22,16 +22,37 @@ blogsRouter.get('/', (request, response) => {
 })
 */
 
-
-blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
-  response.json(blogs.map(blog => blog.toJSON()))
+/**
+ * Random generator
+ * @param {TYPE} arg
+ * @return {!Array<TYPE>}
+ * @template TYPE
+ */
+blogsRouter.get('/', async (request, response, next) => {
+  try {
+    const blogs = await Blog.find({})
+    response.json(blogs.map(blog => blog.toJSON()))
+  } catch (error) {
+    next(error)
+  }
 })
 
+blogsRouter.get('/:id', (request, response, next) => {
+  Blog.findById(request.params.id)
+    .then(note => {
+      if (note) {
+        response.json(note.toJSON())
+      } else {
+        response.status(204).end()
+      }
+    })
+    .catch(error => next(error))
+})
 
 /*   */
 blogsRouter.post('/', (request, response, next) => {
 
+  //console.log('Router.post request.body', request.body)
   const body = request.body
 
   const blog = new Blog({

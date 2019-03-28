@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 var uniqueValidator = require('mongoose-unique-validator')
 
-
-
 const blogSchema = new mongoose.Schema({
   title: String,
   author: String,
@@ -17,7 +15,6 @@ blogSchema.set('toJSON', {
     delete returnedObject.__v
   }
 })
-
 
 //noteSchema.plugin(uniqueValidator)
 
