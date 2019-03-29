@@ -72,6 +72,29 @@ test('adding blog adds blog by one in a right form', async () => {
 })
 
 
+test('if title or url empty response data 400', async () => {
+
+  let blogObject = {
+    'title': '',
+    'author': 'Testi Testinen',
+    'url': 'www.testi.com',
+    'likes': '123'
+  }
+
+  const response = await api.post('/api/blogs').send(blogObject)
+  //const responseGetAll = await api.get('/api/blogs')
+  //const responseGetOne = await api.get('/api/blogs/' + responsePost.body.id)
+  //console.log('responsePost.error.text', response.status)
+  console.log('response', response.res.statusMessage)
+  console.log('response', response.res.statusCode)
+
+
+  expect(response.res.statusCode + ' ' + response.res.statusMessage).toContain('400 Bad Request')
+
+
+})
+
+
 test('the first note is about HTTP methods', async () => {
   const response = await api.get('/api/blogs')
 

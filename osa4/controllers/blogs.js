@@ -52,8 +52,16 @@ blogsRouter.get('/:id', (request, response, next) => {
 /*   */
 blogsRouter.post('/', (request, response, next) => {
 
-  //console.log('Router.post request.body', request.body)
+  console.log('Router.post request.body', request.body)
   const body = request.body
+
+  if(body.title === '' || body.url === ''){
+    console.log('EMPTY title tai url')
+    return response.json(400, 'bad request')
+    //return response.statusMessage = 'Current password does not match'
+
+  }
+
 
   const blog = new Blog({
     title: body.title,

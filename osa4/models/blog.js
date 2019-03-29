@@ -16,6 +16,6 @@ blogSchema.set('toJSON', {
   }
 })
 
-//noteSchema.plugin(uniqueValidator)
+blogSchema.plugin(uniqueValidator)
 
 module.exports = mongoose.model('Blog', blogSchema)
