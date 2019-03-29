@@ -85,8 +85,8 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     personsArray = personsArray.filter(note => note.id != request.params.id)
     */
   try{
-    const blogs = await Blog.findOneAndDelete(request.params.id)
-    response.json(blogs)
+    const result = await Blog.findOneAndDelete(request.params.id)
+    response.json(result)
   }catch(error){
     next(error)
   }
@@ -97,6 +97,39 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     return response.status(204).end()
   }).catch(error => next(error))
 */
+})
+
+blogsRouter.put('/:id', async (request, response, next) => {
+
+  const body = request.body
+  /*
+  if(personsArray.find(function(element) {
+    return request.params.id == element.id
+  })){
+    personsArray = personsArray.map(function(person){
+      if(person.name === body.name) {
+        person.number = body.number
+      }
+      return person
+    })
+
+    */
+  try {
+    const result = await Blog.findByIdAndUpdate(request.params.id, { $set: { title: body.title } }, { new: true })
+    response.json(result)
+
+  } catch (error) {
+    next(error)
+  }
+  /*
+    => {
+      if (err) return response.status(500).send(err)
+      return response.json(person)
+    }).catch(error => next(error))
+  } else {
+    return response.status(400).json( { error: 'Did not find person from database' } )
+  }
+  */
 })
 
 module.exports = blogsRouter

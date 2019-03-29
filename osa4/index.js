@@ -15,6 +15,9 @@ server.listen(config.PORT, () => {
 // && 4.7*: apufunktioita ja yksikkötestejä, step5 && 4.8: blogilistan testit, step 1
 // 4.9*: blogilistan testit, step2 && 4.10: blogilistan testit, step3 && 4.10: blogilistan testit, step3
 // 4.11*: blogilistan testit, step4 && 4.12*: blogilistan testit, step5
+// 4.13 blogilistan laajennus, step1 && 4.14* blogilistan laajennus, step2
+
+
 
 
 
