@@ -29,6 +29,7 @@ beforeEach(async () => {
   await blogObject.save()
 })
 
+/*
 
 test('notes are returned as json', async () => {
   await api
@@ -42,63 +43,6 @@ test('right amount of notes', async () => {
   expect(response.body.length).toBe(2)
 })
 
-test('blog _id returned as id', async () => {
-  const response = await api.get('/api/blogs')
-  expect(response.body.map(blog => blog.id)).toBeDefined()
-})
-
-test('adding blog adds blog by one in a right form', async () => {
-
-  let blogObject = {
-    'title': 'Testititle',
-    'author': 'Testi Testinen',
-    'url': 'www.testi.com',
-    'likes': '123'
-  }
-
-  const responsePost = await api.post('/api/blogs').send(blogObject)
-  const responseGetAll = await api.get('/api/blogs')
-  const responseGetOne = await api.get('/api/blogs/' + responsePost.body.id)
-
-  expect(responseGetOne.body).toMatchObject({
-    'title': 'Testititle',
-    'id': responsePost.body.id,
-    'author': 'Testi Testinen',
-    'url': 'www.testi.com',
-    'likes': 123
-  })
-
-  expect(responseGetAll.body.length).toBe(initialNotes.length+1)
-})
-
-
-test('if title or url empty response data 400', async () => {
-
-  let blogObject = {
-    'title': '',
-    'author': 'Testi Testinen',
-    'url': 'www.testi.com',
-    'likes': '123'
-  }
-  const response = await api.post('/api/blogs').send(blogObject)
-  expect(response.res.statusCode + ' ' + response.res.statusMessage).toContain('400 Bad Request')
-})
-
-test('if likes empty set it to zero', async () => {
-
-  let blogObject = {
-    'title': 'Testi Tampio',
-    'author': 'Testi Testinen',
-    'url': 'www.testi.com',
-    'likes': ''
-  }
-  const response = await api.post('/api/blogs').send(blogObject)
-  expect(response.body.likes).toBe(0)
-})
-
-// TODO 4.11*: blogilistan testit, step4
-
-
 test('the first note is about HTTP methods', async () => {
   const response = await api.get('/api/blogs')
 
@@ -109,7 +53,6 @@ test('all notes are returned', async () => {
   const response = await api.get('/api/blogs')
   expect(response.body.length).toBe(initialNotes.length)
 })
-
 
 
 test('a specific note is within the returned notes', async () => {
@@ -123,7 +66,66 @@ test('a specific note is within the returned notes', async () => {
 })
 
 
+*/
 
+
+
+describe('All tests', async () => {
+
+  test('blog _id returned as id', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body.map(blog => blog.id)).toBeDefined()
+  })
+
+  test('adding blog adds blog by one in a right form', async () => {
+
+    let blogObject = {
+      'title': 'Testititle',
+      'author': 'Testi Testinen',
+      'url': 'www.testi.com',
+      'likes': '123'
+    }
+
+    const responsePost = await api.post('/api/blogs').send(blogObject)
+    const responseGetAll = await api.get('/api/blogs')
+    const responseGetOne = await api.get('/api/blogs/' + responsePost.body.id)
+
+    expect(responseGetOne.body).toMatchObject({
+      'title': 'Testititle',
+      'id': responsePost.body.id,
+      'author': 'Testi Testinen',
+      'url': 'www.testi.com',
+      'likes': 123
+    })
+
+    expect(responseGetAll.body.length).toBe(initialNotes.length+1)
+  })
+
+
+  test('if title or url empty response data 400', async () => {
+
+    let blogObject = {
+      'title': '',
+      'author': 'Testi Testinen',
+      'url': 'www.testi.com',
+      'likes': '123'
+    }
+    const response = await api.post('/api/blogs').send(blogObject)
+    expect(response.res.statusCode + ' ' + response.res.statusMessage).toContain('400 Bad Request')
+  })
+
+  test('if likes empty set it to zero', async () => {
+
+    let blogObject = {
+      'title': 'Testi Tampio',
+      'author': 'Testi Testinen',
+      'url': 'www.testi.com',
+      'likes': ''
+    }
+    const response = await api.post('/api/blogs').send(blogObject)
+    expect(response.body.likes).toBe(0)
+  })
+}) //describet All tests
 
 afterAll(() => {
   mongoose.connection.close()
