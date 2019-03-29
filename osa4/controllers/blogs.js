@@ -52,18 +52,15 @@ blogsRouter.get('/:id', (request, response, next) => {
 /*   */
 blogsRouter.post('/', (request, response, next) => {
 
-  console.log('Router.post request.body', request.body)
   const body = request.body
 
   if(body.title === '' || body.url === ''){
     console.log('EMPTY title tai url')
     return response.json(400, 'bad request')
   }
-
   if(body.likes === ''){
     body.likes = 0
   }
-
 
   const blog = new Blog({
     title: body.title,
@@ -79,7 +76,28 @@ blogsRouter.post('/', (request, response, next) => {
       response.json(blogs)
     }).catch(error => next(error))
 })
+blogsRouter.delete('/:id', async (request, response, next) => {
+  // id:tä ei löytynyt jos filter palauttaa tyhjän taulukon
+  /*
+  personsArray.map(note => console.log('note.id', note.id))
 
+  if ( personsArray.filter(note => note.id == request.params.id).length != 0 ) {
+    personsArray = personsArray.filter(note => note.id != request.params.id)
+    */
+  try{
+    const blogs = await Blog.findOneAndDelete(request.params.id)
+    response.json(blogs)
+  }catch(error){
+    next(error)
+  }
+
+  /*
+  Blog.findByIdAndRemove(request.params.id, (err) => {
+    if (err) return response.status(500).send(err)
+    return response.status(204).end()
+  }).catch(error => next(error))
+*/
+})
 
 module.exports = blogsRouter
 
