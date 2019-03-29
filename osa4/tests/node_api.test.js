@@ -80,19 +80,23 @@ test('if title or url empty response data 400', async () => {
     'url': 'www.testi.com',
     'likes': '123'
   }
-
   const response = await api.post('/api/blogs').send(blogObject)
-  //const responseGetAll = await api.get('/api/blogs')
-  //const responseGetOne = await api.get('/api/blogs/' + responsePost.body.id)
-  //console.log('responsePost.error.text', response.status)
-  console.log('response', response.res.statusMessage)
-  console.log('response', response.res.statusCode)
-
-
   expect(response.res.statusCode + ' ' + response.res.statusMessage).toContain('400 Bad Request')
-
-
 })
+
+test('if likes empty set it to zero', async () => {
+
+  let blogObject = {
+    'title': 'Testi Tampio',
+    'author': 'Testi Testinen',
+    'url': 'www.testi.com',
+    'likes': ''
+  }
+  const response = await api.post('/api/blogs').send(blogObject)
+  expect(response.body.likes).toBe(0)
+})
+
+// TODO 4.11*: blogilistan testit, step4
 
 
 test('the first note is about HTTP methods', async () => {

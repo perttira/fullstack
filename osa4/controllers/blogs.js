@@ -58,8 +58,10 @@ blogsRouter.post('/', (request, response, next) => {
   if(body.title === '' || body.url === ''){
     console.log('EMPTY title tai url')
     return response.json(400, 'bad request')
-    //return response.statusMessage = 'Current password does not match'
+  }
 
+  if(body.likes === ''){
+    body.likes = 0
   }
 
 
