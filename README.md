@@ -1,7 +1,24 @@
-# fullstack
 
-Full Stack Open 2018 kurssin suoritus-repository.
+# Full Stack Open 2019
 
-http://moocfi.github.io/courses/2018/fullstack/
+Helsingin Yliopiston järjestämän kurssin harjoitustehtävät. Osa backendin tehtävistä on tehty fullstack_osa3 kansioon tehtävänannon mukaisesti. 
 
-editing pediting
+https://fullstackopen-2019.github.io/#course-contents
+
+
+![scrrenshot](http://i.imgur.com/pHf4fjt.gif)
+
+## Use
+
+### Locally
+
+```
+$ go get https://github.com/perttira/fullstack
+$ npm run
+```
+
+## Testing
+
+```
+$ npm test
+```
