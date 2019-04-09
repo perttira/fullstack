@@ -6,7 +6,7 @@ Helsingin Yliopiston järjestämän kurssin harjoitustehtävät. Osa backendin t
 https://fullstackopen-2019.github.io/#course-contents
 
 
-![scrrenshot](http://i.imgur.com/pHf4fjt.gif)
+![scrrenshot](https://github.com/perttira/fullstack/blob/master/fullstack.gif)
 
 ## Use
 
