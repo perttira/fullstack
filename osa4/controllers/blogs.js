@@ -1,5 +1,8 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
+
 var blogArray = []
 
 // osa4 4.1 blogilista, step1 && 4.2 blogilista, step2
@@ -50,9 +53,13 @@ blogsRouter.get('/:id', (request, response, next) => {
 })
 
 /*   */
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/', async (request, response, next) => {
 
+
+  // TODO laita uusi koodi toimimaan ennen kuin jatkat lukemista
   const body = request.body
+
+  const user = await User.findById(body.userId)
 
   if(body.title === '' || body.url === ''){
     console.log('EMPTY title tai url')
@@ -66,15 +73,20 @@ blogsRouter.post('/', (request, response, next) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes
+    likes: body.likes,
+    user: user._id
   })
 
   blogArray = blogArray.concat(blog)
 
-  blog.save()
-    .then(blogs => {
-      response.json(blogs)
-    }).catch(error => next(error))
+  try {
+    const savedBlog = await blog.save()
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+    response.json(savedNote.toJSON())
+  } catch(exception) {
+    next(exception)
+  }
 })
 blogsRouter.delete('/:id', async (request, response, next) => {
   // id:tä ei löytynyt jos filter palauttaa tyhjän taulukon
