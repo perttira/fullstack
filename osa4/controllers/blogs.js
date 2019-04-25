@@ -33,7 +33,7 @@ blogsRouter.get('/', (request, response) => {
  */
 blogsRouter.get('/', async (request, response, next) => {
   try {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
     response.json(blogs.map(blog => blog.toJSON()))
   } catch (error) {
     next(error)
@@ -55,11 +55,9 @@ blogsRouter.get('/:id', (request, response, next) => {
 /*   */
 blogsRouter.post('/', async (request, response, next) => {
 
-
-  // TODO laita uusi koodi toimimaan ennen kuin jatkat lukemista
   const body = request.body
-
-  const user = await User.findById(body.userId)
+  //const user = await User.findById(body.userId)
+  const user = await User.findOne()
 
   if(body.title === '' || body.url === ''){
     console.log('EMPTY title tai url')
@@ -77,17 +75,20 @@ blogsRouter.post('/', async (request, response, next) => {
     user: user._id
   })
 
-  blogArray = blogArray.concat(blog)
+  //blogArray = blogArray.concat(blog)
 
   try {
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
-    response.json(savedNote.toJSON())
+    response.json(savedBlog.toJSON())
   } catch(exception) {
     next(exception)
   }
 })
+
+
+
 blogsRouter.delete('/:id', async (request, response, next) => {
   // id:tä ei löytynyt jos filter palauttaa tyhjän taulukon
   /*

@@ -194,8 +194,8 @@ describe('when there is initially one user at db', async () => {
 describe('Teahtava 4.15 blogilistan laajennus step4', async () => {
   beforeEach(async () => {
     await User.deleteMany({})
-    const user = new User({ username: 'root', password: 'sekret' })
-    await user.save()
+    //const user = new User({ username: 'root', password: 'sekret' })
+    //await user.save()
   })
 
   test('creation succeeds with a fresh username', async () => {
