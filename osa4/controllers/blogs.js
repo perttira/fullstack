@@ -82,8 +82,11 @@ blogsRouter.post('/', async (request, response, next) => {
     if (!request.token || !decodedToken.id) {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
+    console.log('decodedToken.id', decodedToken.id)
 
     const user = await User.findById(decodedToken.id)
+
+    console.log('user', user)
 
     const blog = new Blog({
       title: body.title,
@@ -107,6 +110,8 @@ blogsRouter.post('/', async (request, response, next) => {
 
 
 blogsRouter.delete('/:id', async (request, response, next) => {
+  
+  //const body = request.id
   // id:tä ei löytynyt jos filter palauttaa tyhjän taulukon
   /*
   personsArray.map(note => console.log('note.id', note.id))
@@ -114,8 +119,24 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   if ( personsArray.filter(note => note.id == request.params.id).length != 0 ) {
     personsArray = personsArray.filter(note => note.id != request.params.id)
     */
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  console.log('request.params.id', request.params.id)
+
+  const result = await Blog.findOne( { _id: request.params.id } )
+  console.log('decodedToken.id', decodedToken.id)
+  console.log('result', result)
+
+
+  if(!result.user.toString() === decodedToken.id.toString() ){
+    console.log('Käyttäjä on eri kuin blogin luoja')
+    return response.json(400, 'bad request')
+  }
+
   try{
-    const result = await Blog.findOneAndDelete(request.params.id)
+    // TODO poistaa väärän (ensimmäisen?) blogin. Laita poistamaan id:n mukainen
+    const result = await Blog.findOneAndDelete( { _id: request.params.id } )
     response.json(result)
   }catch(error){
     next(error)

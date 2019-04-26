@@ -19,6 +19,8 @@ server.listen(config.PORT, () => {
 // 4.15: blogilistan laajennus, step4 && 4.16*: blogilistan laajennus, step5
 // 4.17: blogilistan laajennus, step6 && 4.18: blogilistan laajennus, step7
 // 4.19: blogilistan laajennus, step8 && 4.20*: blogilistan laajennus, step9
+// 4.21*: blogilistan laajennus, step10
+
 
 
 
