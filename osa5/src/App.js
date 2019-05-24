@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import Notification from './components/Notification'
 import Blog from './components/Blog'
+import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login' 
+import Togglable from './components/Togglable'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([]) 
@@ -13,8 +16,11 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
-
   const [isLoading, setIsLoading] = useState(false);
+  const [loginVisible, setLoginVisible] = useState(false)
+ // const noteFormRef = React.createRef()
+
+
 
 
   useEffect(() => {
@@ -57,7 +63,7 @@ const App = () => {
 
   const handleCreateBlog = async (e) => {
     e.preventDefault()
-
+   // noteFormRef.current.toggleVisibility()
     const noteObject = {
       title: e.target.blogTitle.value,
       author: e.target.blogAuthor.value,
@@ -84,36 +90,25 @@ const App = () => {
   const handleLogout = (event) => {
     window.storage.removeItem("name")
   }
+
+  const loginForm = () => {
+    return (
+      <Togglable buttonLabel='login'>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+      </Togglable>
+    )
+  }
+
   if (user === null) {
 
   return (
-    <div>
-      <h1>Muistiinpanot</h1>
-      <Notification message={errorMessage} />
-      <h2>Kirjaudu</h2>
-
-      <form onSubmit={handleLogin}>
-        <div>
-          käyttäjätunnus
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          salasana
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">kirjaudu</button>
-      </form>
-    </div>
+    loginForm()
   )
 }else{
   return(   
