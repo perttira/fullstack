@@ -117,14 +117,21 @@ const App = () => {
         <div>Loading ...</div>
       ) : (
         <div>
+          
           <h2>blogs</h2>
+          
           <Notification message={errorMessage} />
+          
           <p>{user.username} logged in</p>
+          
           {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+          
           <CreateBlog handleClick={handleCreateBlog}/>
+          
           <form onSubmit={handleLogout}>
             <button type="submit">logout</button>
           </form>
+        
         </div>
       )}
   </div>

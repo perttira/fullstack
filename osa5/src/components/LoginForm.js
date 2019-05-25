@@ -10,7 +10,8 @@ const LoginForm = ({
   return (
     <div>
       <h2>Kirjaudu</h2>
-
+      <p>käyttäjätunnus: mluukkai</p> 
+      <p>salasana: salainen</p>
       <form onSubmit={handleSubmit}>
         <div>
           käyttäjätunnus
