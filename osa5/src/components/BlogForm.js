@@ -12,6 +12,7 @@ const NoteForm = ({ onSubmit, handleChange, value }) => {
         />
         <button type="submit">tallenna</button>
       </form>
+
     </div>
   )
 }

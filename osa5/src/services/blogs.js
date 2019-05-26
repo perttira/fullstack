@@ -13,6 +13,14 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const update = (newObject) => {
+  console.log('newObject id', newObject.id);
+  const id = newObject.id
+  //const request = axios.put(baseUrl + '/' + noteObject.id)
+  const request = axios.put(`${baseUrl}/${id}`, newObject)
+  return request.then(response => response.data)
+}
+
 const create = async noteObject => {
   const config = {
     headers: { Authorization: token },
@@ -23,4 +31,4 @@ const create = async noteObject => {
   return response.data
 }
 
-export default { getAll, create, setToken }
+export default { getAll, create, update, setToken }

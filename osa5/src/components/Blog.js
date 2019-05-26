@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleClick }) => {
   
   const [blogVisible, setBlogVisible] = useState(false)
 
@@ -9,12 +9,21 @@ const Blog = ({ blog }) => {
     show = 'block'
   }
 
+  const container = {
+    paddingBottom: 5,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+
   const blogStyle = {
     paddingTop: 10,
-    paddingLeft: 2,
+    paddingBottom: 10,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
+    backgroundColor: "#C1BEBB"
+ 
   }
 
   const hideBlogStyle = {
@@ -24,12 +33,16 @@ const Blog = ({ blog }) => {
   }
 
   return(
+    <div style={container}>        
     <div style={blogStyle} onClick={() => setBlogVisible(!blogVisible)}>
       Blog name: {blog.title} Blog author: {blog.author}
       <div style={hideBlogStyle}>
-      Blog url: {blog.url} Blog likes: {blog.likes}
+        Blog url: {blog.url} Blog likes: {blog.likes}
+      </div>
     </div>
+      <button onClick={() => handleClick(blog)} >Like</button>
     </div>
+
 )}
 
 export default Blog

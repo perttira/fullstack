@@ -87,6 +87,44 @@ const App = () => {
   }
   }
 
+  const handleLikeBlog = (blog) => {
+    
+    const blogObject = {
+      id: blog.id,
+      user: blog.user.id,
+      likes: blog.likes +1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    }
+
+    //console.log('noteObject', blogObject.user, blogObject.likes, blogObject.author, blogObject.title, blogObject.url)
+    //console.log('blog.user.id', blog.user.id)
+
+    try{
+      blogService
+      .update(blogObject).then(returnedBlog => {
+     
+        blogService
+        .getAll().then(initialBlogs => {
+          setBlogs(initialBlogs)
+        })
+
+
+      setErrorMessage('You liked '+ blogObject.title + '')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    })
+    } catch (exception){
+      setErrorMessage('Could not add new blog, please try again')
+      setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
+  }
+
   const handleLogout = (event) => {
     window.storage.removeItem("name")
   }
@@ -124,7 +162,7 @@ const App = () => {
           
           <p>{user.username} logged in</p>
           
-          {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+          {blogs.map(blog => <Blog key={blog.id} blog={blog} handleClick={handleLikeBlog}/>)}
           
           <CreateBlog handleClick={handleCreateBlog}/>
           
