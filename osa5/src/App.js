@@ -27,8 +27,14 @@ const App = () => {
     
     blogService
       .getAll().then(initialBlogs => {
-        setBlogs(initialBlogs)
-      })
+        console.log('intialBlogs', initialBlogs)
+
+        let sortedBlogs = initialBlogs.sort(function (a, b) {
+          return b.likes - a.likes
+        })
+    
+    setBlogs(sortedBlogs)
+  })
 
   }, [])
 
@@ -67,7 +73,8 @@ const App = () => {
     const noteObject = {
       title: e.target.blogTitle.value,
       author: e.target.blogAuthor.value,
-      url: e.target.blogUrl.value
+      url: e.target.blogUrl.value,
+      likes: 0
     }
     try{
       blogService

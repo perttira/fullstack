@@ -10,5 +10,8 @@ ReactDOM.render(<App />, document.getElementById('root'))
 // 5.4*: blogilistan frontend, step4
 // 5.5 blogilistan frontend, step5
 // 5.6* blogilistan frontend, step6
+// 5.7*: blogilistan frontend, step7
+// 5.8*: blogilistan frontend, step8
+
 
 
