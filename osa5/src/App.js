@@ -13,8 +13,8 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('mluukkai') 
+  const [password, setPassword] = useState('salainen') 
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false);
   const [loginVisible, setLoginVisible] = useState(false)
@@ -72,6 +72,7 @@ const App = () => {
    // noteFormRef.current.toggleVisibility()
     const noteObject = {
       title: e.target.blogTitle.value,
+      user: user.id,
       author: e.target.blogAuthor.value,
       url: e.target.blogUrl.value,
       likes: 0
@@ -105,16 +106,18 @@ const App = () => {
       url: blog.url
     }
 
-    //console.log('noteObject', blogObject.user, blogObject.likes, blogObject.author, blogObject.title, blogObject.url)
-    //console.log('blog.user.id', blog.user.id)
-
     try{
       blogService
       .update(blogObject).then(returnedBlog => {
      
         blogService
         .getAll().then(initialBlogs => {
-          setBlogs(initialBlogs)
+
+          let sortedBlogs = initialBlogs.sort(function (a, b) {
+            return b.likes - a.likes
+          })
+
+          setBlogs(sortedBlogs)
         })
 
 
@@ -127,11 +130,40 @@ const App = () => {
       setErrorMessage('Could not add new blog, please try again')
       setTimeout(() => {
       setErrorMessage(null)
-    }, 5000)
+      }, 5000)
+    }
   }
 
-  }
+  const handleRemoveBlock = (blog) => {
+    
+    //blogService.setToken(user.token)
 
+
+    if (window.confirm("Do you really want to remove this blog?")) { 
+    
+      try{
+        blogService
+        .remove(blog.id).then(returnedBlog => {
+     
+          blogService
+          .getAll().then(initialBlogs => {
+          setBlogs(initialBlogs)
+          })
+
+          setErrorMessage('You removed '+ blog.title + '')
+          setTimeout(() => {
+          setErrorMessage(null)
+          }, 5000)
+        })
+      } catch (exception){
+        setErrorMessage('Could not remove blog, please try again')
+        setTimeout(() => {
+        setErrorMessage(null)
+        }, 5000)
+      }
+    }
+    return
+  }
   const handleLogout = (event) => {
     window.storage.removeItem("name")
   }
@@ -169,7 +201,7 @@ const App = () => {
           
           <p>{user.username} logged in</p>
           
-          {blogs.map(blog => <Blog key={blog.id} blog={blog} handleClick={handleLikeBlog}/>)}
+          {blogs.map(blog => <Blog key={blog.id} blog={blog} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
           
           <CreateBlog handleClick={handleCreateBlog}/>
           

@@ -8,6 +8,7 @@ const setToken = newToken => {
   token = `bearer ${newToken}`
 }
 
+
 const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
@@ -16,8 +17,15 @@ const getAll = () => {
 const update = (newObject) => {
   console.log('newObject id', newObject.id);
   const id = newObject.id
-  //const request = axios.put(baseUrl + '/' + noteObject.id)
   const request = axios.put(`${baseUrl}/${id}`, newObject)
+  return request.then(response => response.data)
+}
+
+const remove = (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const request = axios.delete(`${baseUrl}/${id}`, config)
   return request.then(response => response.data)
 }
 
@@ -31,4 +39,4 @@ const create = async noteObject => {
   return response.data
 }
 
-export default { getAll, create, update, setToken }
+export default { getAll, create, update, remove, setToken }
