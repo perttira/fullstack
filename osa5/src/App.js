@@ -49,6 +49,7 @@ const App = () => {
       })
 
       setUser(user)
+      console.log('handleLogin user', user);
       setIsLoading(true)
     
       setTimeout(() => {
@@ -70,13 +71,15 @@ const App = () => {
   const handleCreateBlog = async (e) => {
     e.preventDefault()
    // noteFormRef.current.toggleVisibility()
+//   console.log('handleCreateBlog user.id', user.id.toString());
     const noteObject = {
       title: e.target.blogTitle.value,
-      user: user.id,
       author: e.target.blogAuthor.value,
       url: e.target.blogUrl.value,
       likes: 0
     }
+
+
     try{
       blogService
       .create(noteObject).then(returnedBlog => {
@@ -201,7 +204,7 @@ const App = () => {
           
           <p>{user.username} logged in</p>
           
-          {blogs.map(blog => <Blog key={blog.id} blog={blog} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
+          {blogs.map(blog => <Blog key={blog.id} blog={blog} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
           
           <CreateBlog handleClick={handleCreateBlog}/>
           

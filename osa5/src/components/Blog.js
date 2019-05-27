@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick }) => {
+const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
   
   const [blogVisible, setBlogVisible] = useState(false)
 
@@ -31,6 +31,18 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick }) => {
     marginBottom: 5,
     display: show
   }
+  
+  if(user.id === blog.user.id) {
+    var showButton = 'block'
+  }else{
+    showButton = 'none'
+  }
+
+  const hideRemoveStyle = {
+    paddingTop: 10,
+    marginBottom: 5,
+    display: showButton
+  }
 
   return(
     <div style={container}>        
@@ -41,7 +53,7 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick }) => {
         </div>
       </div>
         <button onClick={() => handleLikeClick(blog)} >Like</button>
-      <div>
+      <div style={hideRemoveStyle}>
       <button onClick={() => handleRemoveBlogClick(blog)} >Remove blog</button>
       </div>
     </div>
