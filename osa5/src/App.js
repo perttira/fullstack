@@ -23,7 +23,7 @@ const App = () => {
           return b.likes - a.likes
         })
         setBlogs(sortedBlogs)
-})
+      })
 
   }, [])
 
@@ -193,8 +193,7 @@ const App = () => {
 const CreateBlog = (props) => {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('') 
-
+  const [blogUrl, setBlogUrl] = useState('')
 
   function handleSubmitAndHookReset (e) {
     props.handleClick(e)
