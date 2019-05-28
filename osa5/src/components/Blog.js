@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
-  
+
+
   const [blogVisible, setBlogVisible] = useState(false)
 
   if(blogVisible === false) {
@@ -22,8 +23,7 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-    backgroundColor: "#C1BEBB"
- 
+    backgroundColor: '#C1BEBB'
   }
 
   const hideBlogStyle = {
@@ -31,7 +31,9 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
     marginBottom: 5,
     display: show
   }
-  
+
+  //  console.log('user.id', user.id)
+  //  console.log('blog.user.id', blog.user.id)
   if(user.id === blog.user.id) {
     var showButton = 'block'
   }else{
@@ -45,19 +47,18 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
   }
 
   return(
-    <div style={container}>        
+    <div style={container}>
       <div style={blogStyle} onClick={() => setBlogVisible(!blogVisible)}>
         Blog name: {blog.title} Blog author: {blog.author}
         <div style={hideBlogStyle}>
           Blog url: {blog.url} Blog likes: {blog.likes}
         </div>
       </div>
-        <button onClick={() => handleLikeClick(blog)} >Like</button>
+      <button onClick={() => handleLikeClick(blog)} >Like</button>
       <div style={hideRemoveStyle}>
-      <button onClick={() => handleRemoveBlogClick(blog)} >Remove blog</button>
+        <button onClick={() => handleRemoveBlogClick(blog)} >Remove blog</button>
       </div>
     </div>
-
-)}
+  )}
 
 export default Blog

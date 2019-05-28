@@ -15,7 +15,7 @@ const getAll = () => {
 }
 
 const update = (newObject) => {
-  console.log('newObject id', newObject.id);
+  console.log('newObject id', newObject.id)
   const id = newObject.id
   const request = axios.put(`${baseUrl}/${id}`, newObject)
   return request.then(response => response.data)
@@ -35,7 +35,7 @@ const create = async noteObject => {
   }
 
   const response = await axios.post(baseUrl, noteObject, config)
-  console.log('response.data', response.data);
+  console.log('response.data', response.data)
   return response.data
 }
 
