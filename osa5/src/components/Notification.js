@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const Notification = ({ message }) => {
-  if (message === null) {
+  if (message === '') {
     return null
   }
 
   return (
     <div className="error">
-      
+      {message}
     </div>
   )
 }

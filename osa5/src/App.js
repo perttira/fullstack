@@ -9,7 +9,7 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState('')
   const [username, setUsername] = useState('mluukkai')
   const [password, setPassword] = useState('salainen')
   const [user, setUser] = useState(null)
