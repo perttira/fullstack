@@ -47,6 +47,52 @@ test('renders content', () => {
 
 })
 
+
+
+test('Blog renders default only title and author, after expanding the div other blog information too', () => {
+
+  const blog = {
+    title: 'testiblogi',
+    author: 'testaaja',
+    url: 'www.google.com',
+    user:{
+      id: 1
+    },
+    likes: 1
+  }
+
+  const user = {
+    id: 1
+  }
+
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog blog={blog} onClick={mockHandler} user={user} blogVisible={false}/>
+  )
+
+  component.debug()
+  //console.log(prettyDOM(li))
+
+  expect(component.container).toHaveTextContent(
+    'Blog name: testiblogi Blog author: testaaja'
+  )
+
+  const div = component.container.querySelector('.hideBlog')
+  //fireEvent.click(div)
+  expect(div).toHaveStyle('display: none')
+
+  fireEvent.click(div)
+
+  expect(div).toHaveStyle('display: block')
+
+
+  expect(component.container).toHaveTextContent(
+    'Blog url: www.google.com Blog likes: 1'
+  )
+  
+})
+
 /*
 
 test('renders content', () => {

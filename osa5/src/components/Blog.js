@@ -50,7 +50,7 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
     <div style={container}>
       <div style={blogStyle} onClick={() => setBlogVisible(!blogVisible)}>
         Blog name: {blog.title} Blog author: {blog.author}
-        <div style={hideBlogStyle}>
+        <div className="hideBlog" style={hideBlogStyle}>
           Blog url: {blog.url} Blog likes: {blog.likes}
         </div>
       </div>
