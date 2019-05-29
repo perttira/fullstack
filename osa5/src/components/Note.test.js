@@ -40,8 +40,10 @@ test('renders content', () => {
 
   const button = component.container.querySelector('button')
   fireEvent.click(button)
+  fireEvent.click(button)
 
-  expect(mockHandler.mock.calls.length).toBe(1)
+
+  expect(mockHandler.mock.calls.length).toBe(2)
 
 })
 
