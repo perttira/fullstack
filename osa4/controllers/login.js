@@ -1,3 +1,9 @@
+/*  Koodi aloittaa etsimällä pyynnön mukana olevaa usernamea vastaavan käyttäjän tietokannasta. 
+    Seuraavaksi katsotaan onko pyynnön mukana oleva password oikea. Koska tietokantaan ei ole talletettu
+    salasanaa, vaan salasanasta laskettu hash, tehdään vertailu metodilla bcrypt.compare */
+
+
+
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
@@ -29,7 +35,7 @@ loginRouter.post('/', async (request, response) => {
 
   response
     .status(200)
-    .send({ token, username: user.username, name: user.name })
+    .send({ token, username: user.username, name: user.name, id: user._id })
 })
 
 module.exports = loginRouter

@@ -1,3 +1,15 @@
+/*  Varsinaisen sovelluslogiikan määrittelevä tiedosto app.js ottaa
+    määrittelemämme routerin käyttöön seuraavasti:
+
+    const notesRouter = require('./controllers/notes')
+    app.use('/api/notes', notesRouter)
+
+    Näin määrittelemäämme routeria käytetään jos polun alkuosa on /api/notes.
+    notesRouter-olion sisällä täytyy tämän takia käyttää ainoastaan polun loppuosia,
+    eli tyhjää polkua / tai pelkkää parametria /:id. Tiedostossa siis otetaan käyttöön
+    joukko middlewareja, näistä yksi on polkuun /api/notes kiinnitettävä notesRouter
+    (tai notes-kontrolleri niin kuin jotkut sitä kutsuisivat). */
+
 const config = require('./utils/config')
 const express = require('express')
 const bodyParser = require('body-parser')

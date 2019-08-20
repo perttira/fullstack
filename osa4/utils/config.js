@@ -1,3 +1,5 @@
+/* Ympäristömuuttujien käsittely on eriytetty moduulin utils/config.js vastuulle */
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }

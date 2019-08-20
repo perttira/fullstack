@@ -1,3 +1,7 @@
+/* index.js ainoastaan importaa tiedostossa app.js olevan varsinaisen
+ sovelluksen ja käynnistää sen. Sovelluksen käynnistäminen tapahtuu
+ nyt server-muuttujassa olevan olion kautta. */
+
 const app = require('./app') // varsinainen Express-sovellus
 const http = require('http')
 const config = require('./utils/config')

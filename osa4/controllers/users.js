@@ -30,8 +30,12 @@ usersRouter.post('/', async (request, response, next) => {
   }
 })
 
+/*  Dokumenttitietokannan liitoksen tekeminen suoritetaan Mongoosen komennolla populate.
+    Populaten yhteydessä on myös mahdollista rajata mitä kenttiä sisällytettävistä dokumenteista otetaan mukaan 
+    Populaten parametri määrittelee, että user-dokumenttien notes-kentässä olevat note-olioihin viittaavat id:t korvataan niitä vastaavilla dokumenteilla*/
+
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({}).populate('notes', { content: 1, date: 1 })
+  const users = await User.find({}).populate('blogs', { title: 1, author: 1 })
   response.json(users.map(u => u.toJSON()))
 })
 
