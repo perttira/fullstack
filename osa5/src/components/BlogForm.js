@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NoteForm = ({ onSubmit, handleChange, value }) => {
+const BlogForm = ({ onSubmit, handleChange, value }) => {
   return (
     <div>
       <h2>Luo uusi muistiinpano</h2>
@@ -17,4 +17,4 @@ const NoteForm = ({ onSubmit, handleChange, value }) => {
   )
 }
 
-export default NoteForm
+export default BlogForm

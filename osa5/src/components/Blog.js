@@ -11,52 +11,48 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
   }
 
   const container = {
-    paddingBottom: 5,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
   }
 
   const blogStyle = {
-    paddingTop: 10,
-    paddingBottom: 10,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5,
     backgroundColor: '#C1BEBB'
   }
 
   const hideBlogStyle = {
-    paddingTop: 10,
-    marginBottom: 5,
     display: show
   }
 
-  //  console.log('user.id', user.id)
-  //  console.log('blog.user.id', blog.user.id)
-  if(user.id === blog.user.id) {
+
+  // Remove blog näkyy vain jos kirjautunut käyttäjä on sama kuin blogin luonut käyttäjä
+  console.log('Blog.js user', user)
+  console.log('Blog.js blog', blog)
+  console.log('Blog.js user.id', user.id)
+  console.log('Blog.js blog.user.id', blog.user.id)
+  if(user.id === blog.user.id) { // TODO kun kirjautunut käyttäjä luo blogin, hänelle ei kuitenkaan näy "remove blog" nappi. Luultavasti tietokannassa luotu id ei päivity frontendille
     var showButton = 'block'
   }else{
     showButton = 'none'
   }
 
   const hideRemoveStyle = {
-    paddingTop: 10,
-    marginBottom: 5,
     display: showButton
   }
 
   return(
-    <div style={container}>
-      <div style={blogStyle} onClick={() => setBlogVisible(!blogVisible)}>
-        Blog name: {blog.title} Blog author: {blog.author}
+    <div id='container' style={container}>
+      <div style={blogStyle} onClick={() => setBlogVisible(!blogVisible)} className='blog'>
+        <p>Blog name: {blog.title}</p><p>Blog author: {blog.author}</p>
         <div className="hideBlog" style={hideBlogStyle}>
-          Blog url: {blog.url} Blog likes: {blog.likes}
+          <p>Blog url: {blog.url}</p><p> Blog likes: {blog.likes}</p>
         </div>
       </div>
-      <button onClick={() => handleLikeClick(blog)}>Like</button>
+      <button value="like "onClick={() => handleLikeClick(blog)}>Like</button>
       <div style={hideRemoveStyle}>
-        <button onClick={() => handleRemoveBlogClick(blog)} >Remove blog</button>
+        <button value="remove" onClick={() => handleRemoveBlogClick(blog)} >Remove blog</button>
       </div>
     </div>
   )}

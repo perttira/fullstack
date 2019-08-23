@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
+import './style.css'
 
 ReactDOM.render(<App />, document.getElementById('root'))
 
@@ -19,6 +20,9 @@ ReactDOM.render(<App />, document.getElementById('root'))
 // 5.13: blogilistan testit, step1
 // 5.14: blogilistan testit, step2
 // 5.15*: blogilistan testit, step3
+// 5.16*: blogilistan testit, step4
+// 5.17*: blogilistan testit, step5
+
 
 
 

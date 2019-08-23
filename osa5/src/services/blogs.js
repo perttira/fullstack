@@ -1,3 +1,10 @@
+/*
+    Lisätään kirjautuneen käyttäjän token HTTP-pyynnön Authorization-headeriin.
+    Moduulille on määritelty vain moduulin sisällä näkyvä muuttuja token, jolle
+    voidaan asettaa arvo moduulin exporttaamalla funktiolla setToken.
+    Async/await-syntaksiin muutettu create asettaa moduulin tallessa pitämän tokenin
+    Authorization-headeriin, jonka se antaa axiosille metodin post kolmantena parametrina.
+*/
 
 import axios from 'axios'
 const baseUrl = '/api/blogs'
@@ -33,9 +40,7 @@ const create = async noteObject => {
   const config = {
     headers: { Authorization: token },
   }
-
   const response = await axios.post(baseUrl, noteObject, config)
-  console.log('response.data', response.data)
   return response.data
 }
 

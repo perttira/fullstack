@@ -3,8 +3,10 @@ import Notification from './components/Notification'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
-import loginService from './services/login' 
+import loginService from './services/login'
 import Togglable from './components/Togglable'
+import './style.css'
+
 
 
 const App = () => {
@@ -14,11 +16,13 @@ const App = () => {
   const [password, setPassword] = useState('salainen')
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const blogFormRef = React.createRef()
+
 
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
-        console.log('intialBlogs', initialBlogs)
+        //console.log('intialBlogs', initialBlogs)
         let sortedBlogs = initialBlogs.sort(function (a, b) {
           return b.likes - a.likes
         })
@@ -27,25 +31,59 @@ const App = () => {
 
   }, [])
 
-  // ...
+  /*  Sovellusta on vielä laajennettava siten, että kun sivulle tullaan uudelleen,
+      esim. selaimen uudelleenlataamisen yhteydessä, tulee sovelluksen tarkistaa löytyykö
+      local storagesta tiedot kirjautuneesta käyttäjästä. Jos löytyy, asetetaan ne 
+      sovelluksen tilaan ja noteServicelle
+  */
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
 
+  /*
+      Frontend tallettaa onnistuneen kirjautumisen yhteydessä backendilta saamansa
+      tokenin sovelluksen tilan user kenttään token
+  */
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    //console.log('App.js handleLogin() e.target', e.target )
     try {
       const user = await loginService.login({
-        username, password,
+        username, password
       })
 
+      console.log('App.js handleLogin() user', user )
+
+
       setUser(user)
-      
+
       setIsLoading(true)
-    
+
       setTimeout(() => {
         setIsLoading(false)
-      }, 3000)
-  
-      window.localStorage.setItem('name', user.name)
+      }, 1000)
+
+      /*  Laajennetaan sovellusta siten, että se asettaa kirjautuneen käyttäjän tiedot local storageen.
+          Koska storageen talletettavat arvot ovat merkkijonoja, emme voi tallettaa storageen suoraan
+          Javascript-oliota, vaan ne on muutettava ensin JSON-muotoon metodilla JSON.stringify.
+          Vastaavasti kun JSON-muotoinen olio luetaan local storagesta, on se parsittava takaisin
+          Javascript-olioksi metodilla JSON.parse. Efektin parametrina oleva tyhjä taulukko varmistaa sen,
+          että efekti suoritetaan ainoastaan kun komponentti renderöidään ensimmäistä kertaa.
+          Nyt käyttäjä pysyy kirjautuneena sovellukseen ikuisesti. Sovellukseen olisikin kenties syytä
+          lisätä logout-toiminnallisuus, joka poistaisi kirjautumistiedot local storagesta. 
+          Jätämme kuitenkin uloskirjautumisen harjoitustehtäväksi.
+      */
+      // window.localStorage.setItem('name', user.name)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+
       blogService.setToken(user.token)
       setUsername('')
       setPassword('')
@@ -60,12 +98,27 @@ const App = () => {
   const handleCreateBlog = async (e) => {
     e.preventDefault()
 
+    /*  blogFormRef on viite toggable -komponentin metodiin toggleVisiBility()
+        tässä  metodi sulkee togglable -komponentin, eli tässä tapauksessa formin
+        jolla luotaisiin uusi blogi heti blogin luomisen jälkeen
+    */
+    blogFormRef.current.toggleVisibility()
+
+    //console.log('App.js handleCreateBlog() e.target', e.target)
     const noteObject = {
       title: e.target.blogTitle.value,
       author: e.target.blogAuthor.value,
       url: e.target.blogUrl.value,
+      user: {
+        username: user.username,
+        name: user.name,
+        id: user.id
+      },
+
       likes: 0
     }
+
+    //console.log('App.js handleCreateBlog() noteObject', noteObject)
 
     try{
       blogService
@@ -106,7 +159,7 @@ const App = () => {
               setBlogs(sortedBlogs)
             })
 
-          setErrorMessage('You liked '+ blogObject.title + '')
+          setErrorMessage('You liked blog: '+ blogObject.title + '')
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
@@ -145,19 +198,35 @@ const App = () => {
     return
   }
   const handleLogout = () => {
-    window.storage.removeItem('name')
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser('')
   }
 
+  /*  Muutoksenkäsittelijä on yksinkertainen, se destrukturoi parametrina tulevasta
+      oliosta kentän target ja asettaa sen arvon vastaavaan tilaan. Togglable -komponentti
+      vaatii buttonlabelin toimiakseen.
+  */
   const loginForm = () => {
     return (
-      <Togglable buttonLabel='login'>
-        <LoginForm
+      <Togglable buttonLabel='Blogs login' className='togglable'>
+        <LoginForm className='loginForm'
           username={username}
           password={password}
           handleUsernameChange={({ target }) => setUsername(target.value)}
           handlePasswordChange={({ target }) => setPassword(target.value)}
           handleSubmit={handleLogin}
         />
+      </Togglable>
+    )
+  }
+  /*  Metodilla createRef luodaan ref noteFormRef, joka kiinnitetään muistiinpanojen
+      luomislomakkeen sisältävälle Togglable-komponentille. Nyt siis muuttuja blogFormRef toimii
+      viitteenä komponenttiin
+  */
+  const createBlog = () => {
+    return (
+      <Togglable buttonLabel='Create new blog' className='togglable' ref={blogFormRef}>
+        <CreateBlog className='blogForm'handleClick={handleCreateBlog}/>
       </Togglable>
     )
   }
@@ -172,14 +241,18 @@ const App = () => {
         {isLoading ? (
           <div>Loading ...</div>
         ) : (
-          <div>
-            <h2>blogs</h2>
-            <Notification message={errorMessage} />
-            <p>{user.username} logged in</p>
+          <div id="container-blogs">
+            <div className="blogs-header">
+              <h1>Blogs</h1>
+              <p>Click blog name for more info. Blogs are arranged in descending order based on how much likes they have.</p>
+              <p>&quot;Remove blog&quot; -button visible only for authorized user. User stays logged even if you refresh the page. Use &quot;Logout&quot; -button to log out.</p>
+              <Notification message={errorMessage} />
+              <p className="logged">Logged user: {user.username}</p>
+            </div>
             {blogs.map(blog => <Blog key={blog.id} blog={blog} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
-            <CreateBlog handleClick={handleCreateBlog}/>
+            {createBlog()}
             <form onSubmit={handleLogout}>
-              <button type="submit">logout</button>
+              <button value="logout"type="submit">Logout</button>
             </form>
           </div>
         )}
@@ -203,37 +276,44 @@ const CreateBlog = (props) => {
   }
 
   return(
-    <form onSubmit={handleSubmitAndHookReset} >
-      <div>
-        <h1>Create new blog</h1>
+    <div id="container-blog-form">
+      <form id="blog-form" onSubmit={handleSubmitAndHookReset} >
         <div>
+          <h1>Create new blog</h1>
+          <div id="blog-group-input">
+            <div className="blog-input-div">
     Title: <input
-            type="text"
-            value={blogTitle}
-            name="blogTitle"
-            onChange={({ target }) => setBlogTitle(target.value)}
-          />
-        </div>
-        <div>
+                type="text"
+                value={blogTitle}
+                name="blogTitle"
+                onChange={({ target }) => setBlogTitle(target.value)}
+                className="blog-input"
+              />
+            </div>
+            <div className="blog-input-div">
     Author: <input
-            type="text"
-            value={blogAuthor}
-            name="blogAuthor"
-            onChange={({ target }) => setBlogAuthor(target.value)}
-          />
-        </div>
-        <div>
+                type="text"
+                value={blogAuthor}
+                name="blogAuthor"
+                onChange={({ target }) => setBlogAuthor(target.value)}
+                className="blog-input"
+              />
+            </div>
+            <div className="blog-input-div">
     Url: <input
-            type="text"
-            value={blogUrl}
-            name="blogUrl"
-            onChange={({ target }) => setBlogUrl(target.value)}
-          />
+                type="text"
+                value={blogUrl}
+                name="blogUrl"
+                onChange={({ target }) => setBlogUrl(target.value)}
+                className="blog-input"
+              />
+            </div>
+          </div>
         </div>
-      </div>
 
-      <button type="submit">Create blog</button>
-    </form>
+        <button value="create" className="create">Create blog</button>
+      </form>
+    </div>
   )
 }
 

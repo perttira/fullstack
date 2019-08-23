@@ -9,27 +9,30 @@ const LoginForm = ({
   password
 }) => {
   return (
-    <div>
+    <div id="container-login-form">
       <h2>Kirjaudu</h2>
-      <p>käyttäjätunnus: mluukkai</p>
-      <p>salasana: salainen</p>
-      <form onSubmit={handleSubmit}>
+      <p>Käyttäjätunnus: mluukkai</p>
+      <p>Salasana: salainen</p>
+      <form id="login-form"onSubmit={handleSubmit}>
         <div>
-          käyttäjätunnus
+          Käyttäjätunnus
           <input
+            data-testid="newItemField"
             value={username}
             onChange={handleUsernameChange}
+            className="login-input"
           />
         </div>
         <div>
-          salasana
+          Salasana
           <input
             type="password"
             value={password}
             onChange={handlePasswordChange}
+            className="login-input"
           />
         </div>
-        <button type="submit">kirjaudu</button>
+        <button data-testid="click" type="submit" className='login'>Login</button>
       </form>
     </div>
   )
