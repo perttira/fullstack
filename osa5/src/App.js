@@ -41,6 +41,9 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      console.log('APPIII App.js user.token', user.token)
+      console.log('APPIII App.js blogService', blogService.setToken)
+
       blogService.setToken(user.token)
     }
   }, [])

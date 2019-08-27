@@ -21,7 +21,7 @@ import BlogForm from './BlogForm'
 import Togglable from './Togglable'
 jest.mock('../services/blogs')
 import App from '../App'
-import { log } from 'util';
+import { log } from 'util'
 //import '@testing-library/jest-dom/extend-expect'
 
 const Wrapper = (props) => {
@@ -48,24 +48,20 @@ describe('<App />', () => {
 
     const user = {
       username: 'mluukkai',
-      token: '1231231214',
+      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI1ZDUxNmY2NmViNjhhNjBjNmIwNGRmZTYiLCJpYXQiOjE1NjY5MDc0ODN9.rLoqkGhGaPGjDK7Utt-zgbaekT-E0SlDE5SGh1tX9hQ',
       name: 'Matti Luukkainen',
       password: 'salainen',
       id: '5a437a9e514ab7f168ddf138'
     }
 
-
-
-    localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-
-    
-
     const component = render(
       <App />
     )
+
     component.rerender(<App />)
 
-    
+    localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+
     await waitForElement(
       () => component.getByText('Blogs login')
     )
@@ -73,30 +69,18 @@ describe('<App />', () => {
     const button = component.getByText('Blogs login')
 
     fireEvent.click(button)
-
-    const div = component.container.querySelector('#login-form')
-    //fireEvent.click(div)
+    const div = component.container.querySelector('.togglableContent')
     expect(div).toHaveStyle('display: block')
 
-    //const input = component.container.querySelector('tunnus')
-    //const input2 = component.container.querySelector('salasana')
-
-    //fireEvent.change(input, { target: { value: 'mluukkai' } })
-    //fireEvent.change(input2, { target: { value: 'salainen' } })
-
-
-
-    const button1 = component.container.querySelector('.login')
-
+    
+    const button1 = component.getByText('Login')
     fireEvent.submit(button1)
+
     component.debug()
 
     await waitForElement(
-      () => component.container.querySelector('.blogs-header')
+      () => component.container.querySelector('#container-blogs')
     )
-
-    const div2 = component.container.querySelector('.blogs-header')
-    expect(div2).toHaveStyle('display: block')
 
   })
 })
