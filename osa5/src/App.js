@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
+import  { useField } from './hooks'
 import './style.css'
 
 
@@ -18,7 +19,12 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false)
   const blogFormRef = React.createRef()
 
+  /*  Don’t call Hooks inside loops, conditions, or nested functions. Instead, always use Hooks at the top level of your React function.
+      Don’t call Hooks from regular JavaScript functions. Instead, you can:
 
+      -Call Hooks from React function components.
+      -Call Hooks from custom Hooks
+  */
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
@@ -41,8 +47,8 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      console.log('APPIII App.js user.token', user.token)
-      console.log('APPIII App.js blogService', blogService.setToken)
+      //console.log('APPIII App.js user.token', user.token)
+      //console.log('APPIII App.js blogService', blogService.setToken)
 
       blogService.setToken(user.token)
     }
@@ -61,7 +67,7 @@ const App = () => {
         username, password
       })
 
-      console.log('App.js handleLogin() user', user )
+      //console.log('App.js handleLogin() user', user )
 
 
       setUser(user)
@@ -213,15 +219,16 @@ const App = () => {
     return (
       <Togglable buttonLabel='Blogs login' className='togglable'>
         <LoginForm className='loginForm'
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
+          //username={username}
+          //password={password}
+          handleUsernameChange={useField.state}
+          handlePasswordChange={useField.state}
           handleSubmit={handleLogin}
         />
       </Togglable>
     )
   }
+
   /*  Metodilla createRef luodaan ref noteFormRef, joka kiinnitetään muistiinpanojen
       luomislomakkeen sisältävälle Togglable-komponentille. Nyt siis muuttuja blogFormRef toimii
       viitteenä komponenttiin
@@ -263,8 +270,6 @@ const App = () => {
     )
   }
 }
-
-
 
 const CreateBlog = (props) => {
   const [blogTitle, setBlogTitle] = useState('')

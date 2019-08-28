@@ -5,7 +5,7 @@ const blogs = [
     date: '2019-06-11T16:38:15.541Z',
     important: false,
     user: {
-      _id: '5a437a9e514ab7f168ddf138',
+      id: '5a437a9e514ab7f168ddf138',
       username: 'mluukkai',
       name: 'Matti Luukkainen'
     }
@@ -16,7 +16,7 @@ const blogs = [
     date: '2019-06-11T16:38:57.694Z',
     important: true,
     user: {
-      _id: '5a437a9e514ab7f168ddf138',
+      id: '5a437a9e514ab7f168ddf138',
       username: 'mluukkai',
       name: 'Matti Luukkainen'
     }
@@ -27,7 +27,7 @@ const blogs = [
     date: '2019-06-11T16:39:12.713Z',
     important: true,
     user: {
-      _id: '5a437a9e514ab7f168ddf138',
+      id: '5a437a9e514ab7f168ddf138',
       username: 'mluukkai',
       name: 'Matti Luukkainen'
     }

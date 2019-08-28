@@ -20,6 +20,7 @@ import SimpleBlog from './SimpleBlog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
 jest.mock('../services/blogs')
+jest.mock('../services/login')
 import App from '../App'
 import { log } from 'util'
 //import '@testing-library/jest-dom/extend-expect'
@@ -76,11 +77,16 @@ describe('<App />', () => {
     const button1 = component.getByText('Login')
     fireEvent.submit(button1)
 
-    component.debug()
 
     await waitForElement(
       () => component.container.querySelector('#container-blogs')
     )
+
+    const div2 = component.container.querySelector('#container-blogs')
+
+    expect(div2).toHaveStyle('display: block')
+
+    component.debug()
 
   })
 })

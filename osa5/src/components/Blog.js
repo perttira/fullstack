@@ -28,9 +28,9 @@ const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
 
 
   // Remove blog näkyy vain jos kirjautunut käyttäjä on sama kuin blogin luonut käyttäjä
-  console.log('Blog.js user', user)
-  console.log('Blog.js blog', blog)
-  console.log('Blog.js user.id', user.id)
+  //console.log('Blog.js user', user)
+  //console.log('Blog.js blog', blog)
+  //console.log('Blog.js user.id', user.id)
   console.log('Blog.js blog.user.id', blog.user.id)
   if(user.id === blog.user.id) { // TODO kun kirjautunut käyttäjä luo blogin, hänelle ei kuitenkaan näy "remove blog" nappi. Luultavasti tietokannassa luotu id ei päivity frontendille
     var showButton = 'block'
