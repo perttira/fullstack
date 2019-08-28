@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 const Blog = ({ blog, handleLikeClick, handleRemoveBlogClick, user }) => {
 
-
   const [blogVisible, setBlogVisible] = useState(false)
 
   if(blogVisible === false) {

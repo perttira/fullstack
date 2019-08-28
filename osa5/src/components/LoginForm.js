@@ -1,24 +1,33 @@
 import React from 'react'
+import  { useField } from '../hooks'
 import PropTypes from 'prop-types'
+
 
 const LoginForm = ({
   handleSubmit,
+  userType,
+  userValue,
+  passwordType,
+  passwordValue,
   handleUsernameChange,
   handlePasswordChange,
-  username,
-  password
+  //username,
+  password,
+
 }) => {
   return (
     <div id="container-login-form">
       <h2>Kirjaudu</h2>
       <p>Käyttäjätunnus: mluukkai</p>
       <p>Salasana: salainen</p>
-      <form id="login-form"onSubmit={handleSubmit}>
+      <form id="login-form" onSubmit={handleSubmit}>
         <div>
           Käyttäjätunnus
           <input
             data-testid="newItemField"
-            value={username}
+            name="username"
+            type={userType}
+            value={userValue}
             onChange={handleUsernameChange}
             className="login-input"
           />
@@ -26,8 +35,9 @@ const LoginForm = ({
         <div>
           Salasana
           <input
-            type="password"
-            value={password}
+            name="password"
+            type={passwordType}
+            value={passwordValue}
             onChange={handlePasswordChange}
             className="login-input"
           />

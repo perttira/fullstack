@@ -13,11 +13,14 @@ import './style.css'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState('')
-  const [username, setUsername] = useState('mluukkai')
-  const [password, setPassword] = useState('salainen')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const blogFormRef = React.createRef()
+  const userField = useField('text')
+  const passwordField = useField('text')
+
 
   /*  Don’t call Hooks inside loops, conditions, or nested functions. Instead, always use Hooks at the top level of your React function.
       Don’t call Hooks from regular JavaScript functions. Instead, you can:
@@ -51,14 +54,16 @@ const App = () => {
     }
   }, [])
 
-
   /*
       Frontend tallettaa onnistuneen kirjautumisen yhteydessä backendilta saamansa
       tokenin sovelluksen tilan user kenttään token
   */
   const handleLogin = async (e) => {
     e.preventDefault()
-    //console.log('App.js handleLogin() e.target', e.target )
+
+    const username = e.target.username.value
+    const password = e.target.password.value
+
     try {
       const user = await loginService.login({
         username, password
@@ -209,14 +214,23 @@ const App = () => {
       oliosta kentän target ja asettaa sen arvon vastaavaan tilaan. Togglable -komponentti
       vaatii buttonlabelin toimiakseen.
   */
+
+
   const loginForm = () => {
     return (
       <Togglable buttonLabel='Blogs login' className='togglable'>
         <LoginForm className='loginForm'
           //username={username}
           //password={password}
-          handleUsernameChange={useField.state}
-          handlePasswordChange={useField.state}
+          //
+          userType={userField.type}
+        
+          userValue={userField.value}
+          //handleUsernameChange={({ target }) => setUsername(target.value)}
+          handleUsernameChange={userField.onChange}
+          passwordType={passwordField.type}
+          passwordValue={passwordField.value}
+          handlePasswordChange={passwordField.onChange}
           handleSubmit={handleLogin}
         />
       </Togglable>
@@ -230,14 +244,25 @@ const App = () => {
   const createBlog = () => {
     return (
       <Togglable buttonLabel='Create new blog' className='togglable' ref={blogFormRef}>
-        <CreateBlog className='blogForm'handleClick={handleCreateBlog}/>
+        <CreateBlog className='blogForm' handleClick={handleCreateBlog}/>
       </Togglable>
     )
   }
 
   if (user === null) {
     return (
-      loginForm()
+/*
+      <div>
+        <form>
+          <input
+            type={kana.type}
+            value={kana.value}
+            onChange={kana.onChange}
+          />
+        </form>
+      </div>
+      */
+     loginForm()
     )
   }else{
     return(
