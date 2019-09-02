@@ -43,6 +43,133 @@ const Wrapper = (props) => {
 //afterEach(cleanup)
 describe('<App />', () => {
 
+  test('5.13: blogilistan testit, step1 && 5.14: blogilistan testit, step2', () => {
+    let blog = {
+      title: 'testiblogi',
+      author: 'testaaja',
+      user:{
+        id: 1
+      },
+      likes: 1
+    }
+
+    const user = {
+      id: 1
+    }
+
+    /*  Tapahtumankäsittelijäksi annetaan Jestin avulla määritelty mock-funktio.
+      Testi hakee renderöidystä komponentista napin tekstin perusteella ja klikkaa sitä:
+      fireEvent.click(button)
+  */
+    const mockHandler = jest.fn()
+
+    const component = render(
+      <SimpleBlog blog={blog} onClick={mockHandler} user={user}/>
+    )
+
+    //component.debug()
+    //console.log(prettyDOM(li))
+
+
+    expect(component.container).toHaveTextContent(
+      'testiblogi testaaja'
+    )
+
+
+    const button = component.container.querySelector('button')
+    fireEvent.click(button)
+    fireEvent.click(button)
+
+
+    expect(mockHandler.mock.calls.length).toBe(2)
+
+  })
+
+
+  test('5.15*: blogilistan testit, step3', () => {
+
+    let mockBlog = {
+      title: 'testiblogi',
+      author: 'testaaja',
+      url: 'www.google.com',
+      user:{
+        id: 1
+      },
+      likes: 1
+    }
+
+    const user = {
+      id: 1
+    }
+
+    const mockHandler = jest.fn()
+
+    const component = render(
+      <Blog blog={mockBlog} onClick={mockHandler} user={user} hideBlog={false}/>
+    )
+
+    //component.debug()
+    //console.log(prettyDOM(Blog))
+
+    expect(component.container).toHaveTextContent(
+      'Blog name: testiblogiBlog author: testaaja'
+    )
+
+    const div = component.container.querySelector('.hideBlog')
+    //fireEvent.click(div)
+    expect(div).toHaveStyle('display: none')
+
+    fireEvent.click(div)
+
+    expect(div).toHaveStyle('display: block')
+
+
+    expect(component.container).toHaveTextContent(
+      'Blog url: www.google.com Blog likes: 1'
+    )
+
+  })
+
+
+  test('<BlogForm /> updates parent state and calls onSubmit', () => {
+    const onSubmit = jest.fn()
+    const state = {
+      value: ''
+    }
+
+    const component = render(
+      <Wrapper onSubmit={onSubmit} state={state} />
+    )
+
+    const input = component.container.querySelector('input')
+    const form = component.container.querySelector('form')
+
+    fireEvent.change(input, { target: { value: 'lomakkeiden testaus on hankalaa' } })
+    fireEvent.submit(form)
+
+    expect(onSubmit.mock.calls.length).toBe(1)
+    expect(state.value).toBe('lomakkeiden testaus on hankalaa')
+  })
+
+
+  test('5.16*: blogilistan testit, step4', async () => {
+    const component = render(
+      <App />
+    )
+    component.rerender(<App />)
+
+    await waitForElement(
+      () => component.getByText('Blogs login')
+    )
+    //component.debug()
+    const button = component.getByText('Blogs login')
+    //console.log(prettyDOM(button))
+    fireEvent.click(button)
+
+    const div = component.container.querySelector('.togglableContent')
+    expect(div).toHaveStyle('display: block')
+  })
+
 
 
   test('5.17*: blogilistan testit, step5', async () => {
