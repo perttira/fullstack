@@ -48,9 +48,9 @@ blogsRouter.get('/', async (request, response, next) => {
 
 blogsRouter.get('/:id', (request, response, next) => {
   Blog.findById(request.params.id)
-    .then(note => {
-      if (note) {
-        response.json(note.toJSON())
+    .then(blog => {
+      if (blog) {
+        response.json(blog.toJSON())
       } else {
         response.status(204).end()
       }
@@ -82,8 +82,10 @@ const getTokenFrom = request => {
 blogsRouter.post('/', async (request, response, next) => {
 
   const body = request.body
-  //console.log('blogsRouter.post body', body)
   const token = getTokenFrom(request)
+
+  console.log('blogsRouter.post body.text', body.text)
+
 
   if(body.title === '' || body.url === ''){
     console.log('EMPTY title tai url')
@@ -106,6 +108,7 @@ blogsRouter.post('/', async (request, response, next) => {
       author: body.author,
       url: body.url,
       likes: body.likes,
+      text: body.text,
       user: user
     })
 
@@ -152,7 +155,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
   try {
-    const result = await Blog.findByIdAndUpdate(request.params.id, { $set: { title: body.title, author: body.author, url: body.url, likes: body.likes , user: body.user }, }, { new: true })
+    const result = await Blog.findByIdAndUpdate(request.params.id, { $set: { title: body.title, author: body.author, url: body.url, likes: body.likes , user: body.user, text: body.text }, }, { new: true })
     response.json(result)
 
   } catch (error) {

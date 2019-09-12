@@ -35,7 +35,7 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
     logger.error('error connection to MongoDB:', error.message)
   })
 
-app.use(express.static('build'))
+//app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(middleware.tokenExtractor)
 

@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import Notification from './components/Notification'
 import Blog from './components/Blog'
+import SingleBlogView from './components/SingleBlogView'
 import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
 import  { useField } from './hooks'
-import './style.css'
-
+import Styles from'./style.js'
 
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [singleBlog, setSingleBlog] = useState({})
   const [errorMessage, setErrorMessage] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const blogFormRef = React.createRef()
+  const toggleRef = React.createRef()
   const userField = useField('text')
   const passwordField = useField('text')
+  const titleField = useField('text')
+  const authorField = useField('text')
+  const urlField = useField('text')
+  const textField = useField('text')
+  const [singleBlogVisible, setSingleBlogVisible] = useState(false)
 
 
   /*  Don’t call Hooks inside loops, conditions, or nested functions. Instead, always use Hooks at the top level of your React function.
@@ -31,7 +36,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
-        //console.log('intialBlogs', initialBlogs)
+        console.log('intialBlogs', initialBlogs)
         let sortedBlogs = initialBlogs.sort(function (a, b) {
           return b.likes - a.likes
         })
@@ -69,6 +74,7 @@ const App = () => {
         username, password
       })
 
+      console.log('App.js handlelogin user :  ', user)
       setUser(user)
 
       setIsLoading(true)
@@ -93,8 +99,6 @@ const App = () => {
       )
 
       blogService.setToken(user.token)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       setErrorMessage('käyttäjätunnus tai salasana virheellinen')
       setTimeout(() => {
@@ -106,17 +110,18 @@ const App = () => {
   const handleCreateBlog = async (e) => {
     e.preventDefault()
 
-    /*  blogFormRef on viite toggable -komponentin metodiin toggleVisiBility()
+    /*  toggleRef on viite toggable -komponentin metodiin toggleVisiBility()
         tässä  metodi sulkee togglable -komponentin, eli tässä tapauksessa formin
         jolla luotaisiin uusi blogi heti blogin luomisen jälkeen
     */
-    blogFormRef.current.toggleVisibility()
+    toggleRef.current.toggleVisibility()
 
     //console.log('App.js handleCreateBlog() e.target', e.target)
     const noteObject = {
-      title: e.target.blogTitle.value,
-      author: e.target.blogAuthor.value,
-      url: e.target.blogUrl.value,
+      title: e.target.title.value,
+      author: e.target.author.value,
+      url: e.target.url.value,
+      text: e.target.text.value,
       user: {
         username: user.username,
         name: user.name,
@@ -152,7 +157,8 @@ const App = () => {
       likes: blog.likes +1,
       author: blog.author,
       title: blog.title,
-      url: blog.url
+      url: blog.url,
+      text: blog.text
     }
 
     try{
@@ -218,15 +224,10 @@ const App = () => {
 
   const loginForm = () => {
     return (
-      <Togglable buttonLabel='Blogs login' className='togglable'>
+      <Togglable buttonLabel='Blogs login' className='togglable' ref={toggleRef}>
         <LoginForm className='loginForm'
-          //username={username}
-          //password={password}
-          //
           userType={userField.type}
-        
           userValue={userField.value}
-          //handleUsernameChange={({ target }) => setUsername(target.value)}
           handleUsernameChange={userField.onChange}
           passwordType={passwordField.type}
           passwordValue={passwordField.value}
@@ -243,42 +244,95 @@ const App = () => {
   */
   const createBlog = () => {
     return (
-      <Togglable buttonLabel='Create new blog' className='togglable' ref={blogFormRef}>
-        <CreateBlog className='blogForm' handleClick={handleCreateBlog}/>
+      <Togglable buttonLabel='Create new blog' className='togglable' ref={toggleRef}>
+        <BlogForm className='blogForm' handleClick={handleCreateBlog}
+          titleType={titleField.type}
+          titleValue={titleField.value}
+          authorType={authorField.type}
+          authorValue={authorField.value}
+          urlType={urlField.type}
+          urlValue={urlField.value}
+          textType={textField.type}
+          textValue={textField.value}
+          handleTextChange={textField.onChange}
+          handleTitleChange={titleField.onChange}
+          handleAuthorChange={authorField.onChange}
+          handleUrlChange={urlField.onChange}
+          handleSubmit={handleCreateBlog}
+        />
       </Togglable>
     )
   }
+  const classes = Styles.useStyles()
 
-  if (user === null) {
-    return (
 /*
-      <div>
-        <form>
-          <input
-            type={kana.type}
-            value={kana.value}
-            onChange={kana.onChange}
-          />
-        </form>
-      </div>
-      */
-     loginForm()
+  const showSingleBlog = () => {
+    setSingleBlogVisible(!singleBlogVisible)
+    console.log('showSingleBlog metodissa')
+  }
+  */
+
+  const setBlogVisibly = () => {
+    setSingleBlogVisible(!singleBlogVisible)
+
+  }
+
+  const handleClick = (blog) => {
+    console.log('The link was clicked.')
+    setSingleBlog(blog)
+    setBlogVisibly()
+    console.log('blog.author', blog.author)
+  }
+
+
+  if (singleBlogVisible === true) {
+    return(
+      <SingleBlogView blog={singleBlog} onClick={setBlogVisibly} handleRemoveBlogClick={handleRemoveBlock}/>
     )
-  }else{
+  } else  if (user === null) {
+    return (
+      loginForm()
+    )
+  } else {
+
     return(
       <div>
+        
         {isLoading ? (
           <div>Loading ...</div>
         ) : (
-          <div id="container-blogs">
-            <div className="blogs-header">
-              <h1>Blogs</h1>
-              <p>Click blog name for more info. Blogs are arranged in descending order based on how much likes they have.</p>
-              <p>&quot;Remove blog&quot; -button visible only for authorized user. User stays logged even if you refresh the page. Use &quot;Logout&quot; -button to log out.</p>
-              <Notification message={errorMessage} />
-              <p className="logged">Logged user: {user.username}</p>
-            </div>
-            {blogs.map(blog => <Blog key={blog.id} blog={blog} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
+          
+          <div>
+                      {/* https://codesandbox.io/s/48y8zyz46w */}
+
+            <Notification message={errorMessage} />
+            <React.Fragment>
+              <Styles.AppBar position="relative">
+                <Styles.Toolbar>
+                  <Styles.CameraIcon className={classes.icon} />
+                  <Styles.Typography variant="h6" color="inherit" noWrap>
+                    Blogs
+                  </Styles.Typography>
+                </Styles.Toolbar>
+              </Styles.AppBar>
+              <main>
+                <div className={classes.heroContent}>
+                  <Styles.Container maxWidth="md">
+                    <Styles.Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                      Welcome to the great Blog Site
+                    </Styles.Typography>
+                    <Styles.Typography variant="h5" align="center" color="textSecondary" paragraph>
+                      &quot;Remove block&quot; -button visible only for authorized user
+                    </Styles.Typography>
+                  </Styles.Container>
+                </div>
+                <Styles.Container className={classes.cardGrid} maxWidth="md">
+                  <Styles.Grid container spacing={4}>
+                    {map <Blog key={blog.id} blog={blog} handleClick={handleClick} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
+                  </Styles.Grid>
+                </Styles.Container>
+              </main>
+            </React.Fragment>
             {createBlog()}
             <form onSubmit={handleLogout}>
               <button value="logout"type="submit">Logout</button>
@@ -290,58 +344,55 @@ const App = () => {
   }
 }
 
-const CreateBlog = (props) => {
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
+/*
 
-  function handleSubmitAndHookReset (e) {
-    props.handleClick(e)
-    setBlogTitle('')
-    setBlogAuthor('')
-    setBlogUrl('')
-  }
-
-  return(
-    <div id="container-blog-form">
-      <form id="blog-form" onSubmit={handleSubmitAndHookReset} >
-        <div>
-          <h1>Create new blog</h1>
-          <div id="blog-group-input">
-            <div className="blog-input-div">
-    Title: <input
-                type="text"
-                value={blogTitle}
-                name="blogTitle"
-                onChange={({ target }) => setBlogTitle(target.value)}
-                className="blog-input"
-              />
+return(
+  <div>
+    {isLoading ? (
+      <div>Loading ...</div>
+    ) : (
+      <div>
+        <Notification message={errorMessage} />
+        <React.Fragment>
+          <Styles.AppBar position="relative">
+            <Styles.Toolbar>
+              <Styles.CameraIcon className={classes.icon} />
+              <Styles.Typography variant="h6" color="inherit" noWrap>
+                Blogs
+              </Styles.Typography>
+              <span className={classes.toolbarButtons}>
+                <Styles.IconButton color="inherit" aria-label="Edit">
+                </Styles.IconButton>
+                <Styles.IconButton color="inherit" aria-label="Save">
+                </Styles.IconButton>
+              </span>
+              <Styles.Button className={classes.menuButton} size="small" color="secondary" onClick={handleLogout}>
+                Logout
+              </Styles.Button>
+            </Styles.Toolbar>
+          </Styles.AppBar>
+          <main>
+            <div className={classes.heroContent}>
+              <Styles.Container maxWidth="md">
+                <Styles.Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                  Welcome to the great Blog Site
+                </Styles.Typography>
+                <Styles.Typography variant="h5" align="center" color="textSecondary" paragraph>
+                  &quot;Remove block&quot; -button visible only for authorized user
+                </Styles.Typography>
+              </Styles.Container>
             </div>
-            <div className="blog-input-div">
-    Author: <input
-                type="text"
-                value={blogAuthor}
-                name="blogAuthor"
-                onChange={({ target }) => setBlogAuthor(target.value)}
-                className="blog-input"
-              />
-            </div>
-            <div className="blog-input-div">
-    Url: <input
-                type="text"
-                value={blogUrl}
-                name="blogUrl"
-                onChange={({ target }) => setBlogUrl(target.value)}
-                className="blog-input"
-              />
-            </div>
-          </div>
-        </div>
-
-        <button value="create" className="create">Create blog</button>
-      </form>
-    </div>
-  )
-}
-
+            <Styles.Container className={classes.cardGrid} maxWidth="md">
+              <Styles.Grid container spacing={4}>
+                {blogs.map(blog => <Blog key={blog.id} blog={blog} handleClick={handleClick} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
+              </Styles.Grid>
+            </Styles.Container>
+          </main>
+        </React.Fragment>
+        {createBlog()}
+      </div>
+    )}
+  </div>
+)
+*/
 export default App
