@@ -5,8 +5,22 @@ const App = (props) => {
 
   const vote = (id) => {
     console.log('vote', id)
-    props.store.dispatch({type: id})
+    props.store.dispatch({type: 'VOTE', id: id})
 
+  }
+
+  const addNote = (event) => {
+    event.preventDefault()
+    const content = event.target.note.value
+    props.store.dispatch({
+      type: 'NEW_NOTE',
+      data: {
+        content,
+        important: false,
+        id: 0
+      }
+    })
+    event.target.note.value = ''
   }
 
   return (
@@ -24,9 +38,9 @@ const App = (props) => {
         </div>
       )}
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
+      <form onSubmit={addNote}>
+        <div><input name="note"/></div>
+        <button type="submit">create</button>
       </form>
     </div>
   )

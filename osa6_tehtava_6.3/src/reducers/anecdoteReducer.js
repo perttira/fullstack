@@ -1,3 +1,5 @@
+import { switchCase } from "@babel/types"
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -24,28 +26,50 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
   console.log('action.type', action.type)
 
-let anecdoteObject
+  let anecdoteObject
+  //generateId()
+  switch (action.type) {
+    case 'NEW_NOTE':
+      console.log('counterReducer case "NEW_NOTE"')
+      console.log('action.content', action.data.content)
 
- let newAnecdotesList = state.map(anecdote => {
-  console.log('map anecdote.id', anecdote.id)
+      anecdoteObject = {
+        content: action.data.content,
+        id: getId(),
+        important: false,
+        votes: 0
+      }
 
-  if(anecdote.id === action.type){
-    console.log('iffissä')
-
-    anecdoteObject = anecdote
-
-    anecdoteObject.votes++
-
-    //anecdoteObject.ivotesd = anecdoteObject.id.toString()
-
-    anecdote = anecdoteObject
-
+      state.push(anecdoteObject)
+   
+      return state
+    case 'VOTE':
+      console.log('counterReducer case "VOTE"')
+      let newAnecdotesList = state.map(anecdote => {
+      if(anecdote.id === action.id){
+        console.log('iffissä')
+        anecdoteObject = anecdote
+        anecdoteObject.votes++      
+        anecdote = anecdoteObject
+      }
+        return anecdote
+      })      
+        return newAnecdotesList     
+    case 'BAD':
+      console.log('counterReducer case "BAD"')
+      return state = {
+        good: state.good,
+        ok: state.ok,
+        bad: state.bad + 1
+      }
+    case 'ZERO':
+      return state = {
+        good: 0,
+        ok: 0,
+        bad: 0
+      }
+    default: return state
   }
-  return anecdote
-})
-console.log('newAnecdotesList', newAnecdotesList)
-
-  return newAnecdotesList
 }
 
 export default reducer
