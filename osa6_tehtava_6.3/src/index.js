@@ -19,4 +19,7 @@ store.subscribe(render)
 // 6.3: anekdootit, step1
 // 6.4: anekdootit, step2
 // 6.5*: anekdootit, step3
+// 6.6: anekdootit, step4
+
+
 

@@ -11,6 +11,8 @@ const anecdotesAtStart = [
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
+var anecdoteObject
+
 const asObject = (anecdote) => {
   return {
     content: anecdote,
@@ -46,8 +48,6 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
   console.log('action.type', action.type)
 
-  let anecdoteObject
-  //generateId()
   switch (action.type) {
     case 'NEW_NOTE':
       console.log('counterReducer case "NEW_NOTE"')
@@ -92,4 +92,20 @@ const reducer = (state = initialState, action) => {
   }
 }
 
-export default reducer
+export const voteAnecdote = (id) => {
+  return {type: 'VOTE', id: id}
+}
+
+export const createAnecdote = (content) => {
+  anecdoteObject = {
+    type: 'NEW_NOTE',
+    data: {
+      content: content,
+      important: false,
+      id: getId()
+    }
+  }
+  return anecdoteObject
+}
+
+export default (reducer)
