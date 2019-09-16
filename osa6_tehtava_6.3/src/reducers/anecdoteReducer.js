@@ -19,7 +19,27 @@ const asObject = (anecdote) => {
   }
 }
 
+const sort = (anecdotes) => {
+  let sortedBlogs = anecdotes.sort(function (a, b) {
+    return b.votes - a.votes
+  })
+
+  console.log('sort() sortedBlogs', sortedBlogs)
+  return sortedBlogs
+}
+
 const initialState = anecdotesAtStart.map(asObject)
+
+
+//const sortedState = sort(initialState)
+
+//console.log('sortedState', sortedState)
+
+
+
+
+
+
 
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
@@ -42,7 +62,7 @@ const reducer = (state = initialState, action) => {
 
       state.push(anecdoteObject)
    
-      return state
+      return sort(state)
     case 'VOTE':
       console.log('counterReducer case "VOTE"')
       let newAnecdotesList = state.map(anecdote => {
@@ -54,7 +74,7 @@ const reducer = (state = initialState, action) => {
       }
         return anecdote
       })      
-        return newAnecdotesList     
+        return sort(newAnecdotesList)     
     case 'BAD':
       console.log('counterReducer case "BAD"')
       return state = {
@@ -68,7 +88,7 @@ const reducer = (state = initialState, action) => {
         ok: 0,
         bad: 0
       }
-    default: return state
+    default: return sort(state)
   }
 }
 
