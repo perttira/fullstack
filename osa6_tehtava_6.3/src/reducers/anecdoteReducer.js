@@ -51,20 +51,26 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'NEW_NOTE':
       console.log('counterReducer case "NEW_NOTE"')
-      console.log('action.content', action.data.content)
-
+      console.log('action', action)
+      console.log('action.data', action.data)
+    /*
       anecdoteObject = {
         content: action.data.content,
         id: getId(),
         important: false,
         votes: 0
       }
+      */
 
-      state.push(anecdoteObject)
+      state.push(action.data)
+
+      console.log('state', state)
    
       return sort(state)
     case 'VOTE':
       console.log('counterReducer case "VOTE"')
+      console.log('counterReducer case "VOTE" action.data', action.data)
+
       let newAnecdotesList = state.map(anecdote => {
       if(anecdote.id === action.id){
         console.log('iffissä')
@@ -97,12 +103,15 @@ export const voteAnecdote = (id) => {
 }
 
 export const createAnecdote = (content) => {
+  //console.log('createAnecdote metodissa')
+
   anecdoteObject = {
     type: 'NEW_NOTE',
     data: {
       content: content,
-      important: false,
-      id: getId()
+      id: getId(),
+      votes: 0,
+      important: false
     }
   }
   return anecdoteObject
