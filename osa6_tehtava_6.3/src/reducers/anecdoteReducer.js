@@ -1,5 +1,18 @@
 import { switchCase } from "@babel/types"
 
+const initialState = [
+  {
+    content: 'reducer defines how redux store works',
+    important: true,
+    id: 1,
+  },
+  {
+    content: 'state of store can contain any data',
+    important: false,
+    id: 2,
+  },
+]
+/*
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -8,6 +21,7 @@ const anecdotesAtStart = [
   'Premature optimization is the root of all evil.',
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
+*/
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
@@ -26,50 +40,23 @@ const sort = (anecdotes) => {
     return b.votes - a.votes
   })
 
-  console.log('sort() sortedBlogs', sortedBlogs)
+  //console.log('sort() sortedBlogs', sortedBlogs)
   return sortedBlogs
 }
 
-const initialState = anecdotesAtStart.map(asObject)
-
-
-//const sortedState = sort(initialState)
-
-//console.log('sortedState', sortedState)
-
-
-
-
-
-
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  console.log('action.type', action.type)
 
   switch (action.type) {
     case 'NEW_NOTE':
       console.log('counterReducer case "NEW_NOTE"')
-      console.log('action', action)
-      console.log('action.data', action.data)
-    /*
-      anecdoteObject = {
-        content: action.data.content,
-        id: getId(),
-        important: false,
-        votes: 0
-      }
-      */
 
       state.push(action.data)
-
-      console.log('state', state)
+      state.filter = 'IMPORTANT'
    
       return sort(state)
     case 'VOTE':
       console.log('counterReducer case "VOTE"')
-      console.log('counterReducer case "VOTE" action.data', action.data)
 
       let newAnecdotesList = state.map(anecdote => {
       if(anecdote.id === action.id){

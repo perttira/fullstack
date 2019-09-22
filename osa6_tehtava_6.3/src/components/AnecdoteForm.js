@@ -19,7 +19,6 @@ const AnecdoteForm = (store) => {
 
   const submitNote = (e) => {
     e.preventDefault()
-    console.log('submitNote ', e.target.note.value )
     store.store.dispatch(createAnecdote(e.target.note.value))
     inputHandler.reset()
   }
