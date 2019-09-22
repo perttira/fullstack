@@ -2,6 +2,7 @@ import React from 'react'
 import Anecdotes from './components/AnecdoteList'
 import AnecdoteForm from './components/AnecdoteForm'
 import VisibilityFilter from './components/VisibilityFilter'
+import Notification from './components/Notification'
 
 
 
@@ -27,6 +28,7 @@ const App = (props) => {
 
   return (
     <div>
+      <Notification props={props.store}/>
       <Anecdotes store={props.store}/>
       <VisibilityFilter store={props.store} />
       <AnecdoteForm store={props.store}/>

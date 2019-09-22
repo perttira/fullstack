@@ -21,8 +21,8 @@ const store = createStore(reducer)
 //store.subscribe(() => console.log(store.getState()))
 //store.dispatch(filterChange('IMPORTANT'))
 //store.dispatch(createAnecdote('combineReducers forms one reduces from many simple reducers'))
-store.dispatch(setNotification('VAROITUS'))
-console.log('store.getState().notify', store.getState().notify)
+//store.dispatch(setNotification('VAROITUS'))
+//console.log('store.getState().notify', store.getState().notify)
 
 
 const render = () => {

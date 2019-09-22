@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import  { useField } from '../hooks'
+import  { setNotification } from '../reducers/notificationReducer'
 import { 
   createAnecdote
 } from '../reducers/anecdoteReducer' 
@@ -17,16 +18,22 @@ const AnecdoteForm = (store) => {
   //console.log('Anecdotes')
   //const anecdotes = [1,2,3]
 
-  const submitNote = (e) => {
+  const submitAnecdote = (e) => {
     e.preventDefault()
     store.store.dispatch(createAnecdote(e.target.note.value))
     inputHandler.reset()
+    store.store.dispatch(setNotification('YOU MADE A NEW ANECDOTE!'))
+    
+    setTimeout(() => {
+        store.store.dispatch(setNotification(''))
+    }, 5000)
+      
   }
   
   return (
     <div>
       <h2>create new anecdote</h2>
-      <form className="submitForm" onSubmit={submitNote}>
+      <form className="submitForm" onSubmit={submitAnecdote}>
         <input type={inputHandler.value} name="note" value={inputHandler.value} onChange={inputHandler.onChange}/>
         <button className="button" type="submit">create</button>
       </form>

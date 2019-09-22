@@ -5,11 +5,13 @@ const initialState = [
     content: 'reducer defines how redux store works',
     important: true,
     id: 1,
+    votes: 0
   },
   {
     content: 'state of store can contain any data',
     important: false,
     id: 2,
+    votes: 0
   },
 ]
 /*
@@ -50,10 +52,8 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'NEW_NOTE':
       console.log('counterReducer case "NEW_NOTE"')
-
       state.push(action.data)
       state.filter = 'IMPORTANT'
-   
       return sort(state)
     case 'VOTE':
       console.log('counterReducer case "VOTE"')

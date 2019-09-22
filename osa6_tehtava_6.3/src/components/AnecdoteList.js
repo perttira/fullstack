@@ -1,4 +1,5 @@
 import React from 'react'
+import  { setNotification } from '../reducers/notificationReducer'
 import { 
   voteAnecdote
 } from '../reducers/anecdoteReducer' 
@@ -22,9 +23,18 @@ const Anecdotes = (store) => {
       : anecdotes.filter(anecdote => !anecdote.important)
   }
 
+  const submitVote = (id, content) => {
+    store.store.dispatch(voteAnecdote(id))
+    store.store.dispatch(setNotification('YOU VOTED ANECDOTE: '+ content +'!'))
+    
+    setTimeout(() => {
+        store.store.dispatch(setNotification(''))
+    }, 5000)   
+  }
+
   return (
     <div>
-      {anecdotesToShow().map(anecdote => <div key={anecdote.id}> {anecdote.content} has {anecdote.votes} <button onClick={() => store.store.dispatch(voteAnecdote(anecdote.id))}>vote</button></div>)}
+      {anecdotesToShow().map(anecdote => <div key={anecdote.id}> {anecdote.content} has {anecdote.votes} <button onClick={() => submitVote(anecdote.id, anecdote.content) }>vote</button></div>)}
     </div>
   )
 }

@@ -11,6 +11,9 @@ const notificationReducer = (state = notification, action) => {
       state = notification
       console.log('notificationReducer state', state);
       return state
+      setTimeout(() => {
+        state = ''
+      }, 5000)
     default:
       return state
   }

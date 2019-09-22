@@ -14,10 +14,11 @@ const Notification = (props) => {
     </div>
   )
   */
+ console.log('props.store', props.props.getState().notify)  
 
  return (
   <div style={style}>
-    {props.store.getState().notify}
+    {props.props.getState().notify}
   </div>
 )
 }
