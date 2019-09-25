@@ -1,5 +1,6 @@
 import React from 'react'
 import Anecdotes from './components/AnecdoteList'
+import Filter from './components/Filter'
 import AnecdoteForm from './components/AnecdoteForm'
 import VisibilityFilter from './components/VisibilityFilter'
 import Notification from './components/Notification'
@@ -24,11 +25,12 @@ const App = (props) => {
   */
 
   
- console.log('App.js props', props)
+ //console.log('App.js props', props)
 
   return (
     <div>
       <Notification props={props.store}/>
+      <Filter store={props.store}/>
       <Anecdotes store={props.store}/>
       <VisibilityFilter store={props.store} />
       <AnecdoteForm store={props.store}/>

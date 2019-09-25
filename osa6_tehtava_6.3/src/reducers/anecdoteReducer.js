@@ -53,7 +53,7 @@ const reducer = (state = initialState, action) => {
     case 'NEW_NOTE':
       console.log('counterReducer case "NEW_NOTE"')
       state.push(action.data)
-      state.filter = 'IMPORTANT'
+      //state.filter = 'IMPORTANT'
       return sort(state)
     case 'VOTE':
       console.log('counterReducer case "VOTE"')

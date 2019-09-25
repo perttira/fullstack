@@ -3,17 +3,19 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import anecdoteReducer from './reducers/anecdoteReducer'
 import filterReducer from './reducers/filterReducer'
+import visibilityFilterReducer from './reducers/visibilityFilterReducer'
 import notificationReducer from './reducers/notificationReducer'
 import { createStore, combineReducers } from 'redux'
-import { createAnecdote } from './reducers/anecdoteReducer'
-import { filterChange } from './reducers/filterReducer'
-import { setNotification } from './reducers/notificationReducer'
+//import { createAnecdote } from './reducers/anecdoteReducer'
+//import { filterChange } from './reducers/visibilityFilterReducer'
+//import { setNotification } from './reducers/notificationReducer'
 
 
 const reducer = combineReducers({
   anecdotes: anecdoteReducer,
-  filter: filterReducer,
-  notify: notificationReducer
+  visibilityFilter: visibilityFilterReducer,
+  notify: notificationReducer,
+  filter: filterReducer
 })
 
 const store = createStore(reducer)
@@ -43,6 +45,10 @@ store.subscribe(render)
 // 6.7: anekdootit, step5
 // 6.8: anekdootit, step6
 // 6.9 anekdootit, step7
+// 6.10 paremmat anekdootit, step8
+// 6.11* paremmat anekdootit, step9
+
+
 
 
 

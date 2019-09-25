@@ -32,7 +32,7 @@ const AnecdoteForm = (store) => {
   
   return (
     <div>
-      <h2>create new anecdote</h2>
+      <h2>Create new anecdote</h2>
       <form className="submitForm" onSubmit={submitAnecdote}>
         <input type={inputHandler.value} name="note" value={inputHandler.value} onChange={inputHandler.onChange}/>
         <button className="button" type="submit">create</button>

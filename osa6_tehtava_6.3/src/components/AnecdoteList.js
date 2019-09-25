@@ -12,13 +12,15 @@ const Anecdotes = (store) => {
   Huomaa miten storen tilan kentät on otettu tuttuun tapaan
   destrukturoimalla apumuuttujiin 
   */
-  const { anecdotes, filter } = store.store.getState()
+  const { anecdotes, visibilityFilter } = store.store.getState()
+
+    //console.log('Anecdotelist.js visibilityFilter', visibilityFilter)
 
   const anecdotesToShow = () => {
-    if ( filter === 'ALL' ) {
+    if ( visibilityFilter === 'ALL' ) {
       return anecdotes
     }
-    return filter === 'IMPORTANT'
+    return visibilityFilter === 'IMPORTANT'
       ? anecdotes.filter(anecdote => anecdote.important)
       : anecdotes.filter(anecdote => !anecdote.important)
   }
@@ -32,9 +34,11 @@ const Anecdotes = (store) => {
     }, 5000)   
   }
 
+  const filtteroi = anecdotesToShow().filter(anecdote => anecdote.content.startsWith(store.store.getState().filter))
+
   return (
     <div>
-      {anecdotesToShow().map(anecdote => <div key={anecdote.id}> {anecdote.content} has {anecdote.votes} <button onClick={() => submitVote(anecdote.id, anecdote.content) }>vote</button></div>)}
+      {filtteroi.map(anecdote => <div key={anecdote.id}> {anecdote.content} has {anecdote.votes} <button onClick={() => submitVote(anecdote.id, anecdote.content) }>vote</button></div>)}
     </div>
   )
 }
