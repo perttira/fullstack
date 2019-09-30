@@ -1,46 +1,55 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import  { setNotification } from '../reducers/notificationReducer'
 import { 
   voteAnecdote
 } from '../reducers/anecdoteReducer' 
 import { log } from 'util'
+//import { log } from 'util'
 
 
-const Anecdotes = (store) => {
+const Anecdotes = (props) => {
   
+  //console.log('AnecdoteList props.anecdotes', props.notes)
+
+  //console.log('AnecdoteList props.filter', props.filter)
   /*
   Huomaa miten storen tilan kentät on otettu tuttuun tapaan
   destrukturoimalla apumuuttujiin 
   */
-  const { anecdotes, visibilityFilter } = store.store.getState()
-
-    //console.log('Anecdotelist.js visibilityFilter', visibilityFilter)
-
+ // const { anecdotes, visibilityFilter } = store.store.getState()
+  
   const anecdotesToShow = () => {
-    if ( visibilityFilter === 'ALL' ) {
-      return anecdotes
+    if (props.filter === 'ALL') {
+      return props.notes
     }
-    return visibilityFilter === 'IMPORTANT'
-      ? anecdotes.filter(anecdote => anecdote.important)
-      : anecdotes.filter(anecdote => !anecdote.important)
-  }
 
+    return props.filter === 'IMPORTANT'
+      ? props.notes.filter(note => note.important)
+      : props.notes.filter(note => !note.important)
+  }
   const submitVote = (id, content) => {
-    store.store.dispatch(voteAnecdote(id))
-    store.store.dispatch(setNotification('YOU VOTED ANECDOTE: '+ content +'!'))
+    props.store.dispatch(voteAnecdote(id))
+    props.store.dispatch(setNotification('YOU VOTED ANECDOTE: '+ content +'!'))
     
     setTimeout(() => {
-        store.store.dispatch(setNotification(''))
+        props.store.dispatch(setNotification(''))
     }, 5000)   
   }
 
-  const filtteroi = anecdotesToShow().filter(anecdote => anecdote.content.startsWith(store.store.getState().filter))
-
   return (
     <div>
-      {filtteroi.map(anecdote => <div key={anecdote.id}> {anecdote.content} has {anecdote.votes} <button onClick={() => submitVote(anecdote.id, anecdote.content) }>vote</button></div>)}
+      {anecdotesToShow().map(anecdote => <div key={anecdote.id}> {anecdote.content} has {anecdote.votes} <button onClick={() => submitVote(anecdote.id, anecdote.content) }>vote</button></div>)}
     </div>
   )
 }
 
-export default Anecdotes
+const mapStateToProps = (state) => {
+  return {
+    notes: state.anecdotes,
+    filter: state.filter,
+  }
+}
+
+export default connect(mapStateToProps)(Anecdotes)
+

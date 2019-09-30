@@ -1,11 +1,7 @@
-import { log } from "util"
-
-const filterReducer = (state = '', action) => {
+const filterReducer = (state = 'ALL', action) => {
   switch (action.type) {
-    case 'SET_VISIBILITY_FILTER':
-      console.log('filterReducer action.filter', action.filter)
-      state = action.filter
-      return state
+    case 'SET_FILTER':
+      return action.filter
     default:
       return state
   }
@@ -13,8 +9,8 @@ const filterReducer = (state = '', action) => {
 
 export const filterChange = filter => {
   return {
-    type: 'SET_VISIBILITY_FILTER',
-    filter
+    type: 'SET_FILTER',
+    filter,
   }
 }
 

@@ -4,15 +4,13 @@ import Filter from './components/Filter'
 import AnecdoteForm from './components/AnecdoteForm'
 import VisibilityFilter from './components/VisibilityFilter'
 import Notification from './components/Notification'
+import { log } from 'util'
 
 
 
 const App = (props) => {
 
-  const filterSelected = (value) => () => {
-    console.log(value)
-  }
-  //const store = props.store
+
   //const anecdotes = store.getState()
 
   /*
@@ -29,11 +27,11 @@ const App = (props) => {
 
   return (
     <div>
-      <Notification props={props.store}/>
-      <Filter store={props.store}/>
-      <Anecdotes store={props.store}/>
-      <VisibilityFilter store={props.store} />
-      <AnecdoteForm store={props.store}/>
+      {/*<Notification props={props.store}/>*/}
+      {/*<Filter store={props.store}/>*/}
+      <Anecdotes/>
+      {/*<VisibilityFilter store={props.store} />*/}
+      {/*<AnecdoteForm store={props.store}/>*/}
     </div>
     
   )

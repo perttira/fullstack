@@ -1,17 +1,10 @@
 import React from 'react'
-import { visibilityFilterChange } from '../reducers/visibilityFilterReducer'
+import { filterChange } from '../reducers/visibilityFilterReducer'
 
 const VisibilityFilter = (props) => {
 
   const filterClicked = (value) => {
-
-    /*
-    props.store.dispatch( {
-      type: 'SET_FILTER',
-      action: 'IMPORTANT'
-    } )
-    */
-    props.store.dispatch(visibilityFilterChange(value))
+    props.store.dispatch(filterChange(value))
   }
 
   return (
