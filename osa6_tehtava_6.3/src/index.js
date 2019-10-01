@@ -32,6 +32,8 @@ const reducer = combineReducers({
 const store = createStore(reducer)
 
 console.log('index.js store', store)
+
+
 //store.subscribe(() => console.log(store.getState()))
 //store.dispatch(filterChange('IMPORTANT'))
 //store.dispatch(createAnecdote('combineReducers forms one reduces from many simple reducers'))
@@ -55,6 +57,9 @@ ReactDOM.render(
 // 6.9 anekdootit, step7
 // 6.10 paremmat anekdootit, step8
 // 6.12 paremmat anekdootit, step10
+// 6.13 paremmat anekdootit, step11
+// 6.14 paremmat anekdootit, step12
+
 
 
 

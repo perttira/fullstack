@@ -1,10 +1,13 @@
 import React from 'react'
-import { filterChange } from '../reducers/visibilityFilterReducer'
+import { connect } from 'react-redux'
+import { visibilityFilterChange } from '../reducers/visibilityFilterReducer'
+import { log } from 'util'
 
 const VisibilityFilter = (props) => {
 
   const filterClicked = (value) => {
-    props.store.dispatch(filterChange(value))
+    console.log('VisibilityFilter.js props.visibilityFilterChange', props.visibilityFilterChange)
+    props.visibilityFilterChange(value)
   }
 
   return (
@@ -31,4 +34,15 @@ const VisibilityFilter = (props) => {
   )
 }
 
-export default VisibilityFilter
+const mapStateToProps = (state) => {
+  return {
+    visibilityFilter: state.visibilityFilter,
+  }
+}
+
+const mapDispatchToProps = {
+  visibilityFilterChange
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisibilityFilter)
+

@@ -27,10 +27,10 @@ const App = (props) => {
 
   return (
     <div>
-      {/*<Notification props={props.store}/>*/}
-      {/*<Filter store={props.store}/>*/}
+      <Notification/>
+      <Filter/>
       <Anecdotes/>
-      {/*<VisibilityFilter store={props.store} />*/}
+      <VisibilityFilter />
       {/*<AnecdoteForm store={props.store}/>*/}
     </div>
     

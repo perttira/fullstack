@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import  { useField } from '../hooks'
 import  { setNotification } from '../reducers/notificationReducer'
 import { 
@@ -41,8 +42,14 @@ const AnecdoteForm = (store) => {
   )
 }
 
-export default AnecdoteForm
+const mapStateToProps = (state) => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter,
+  }
+}
 
+export default connect(mapStateToProps)(AnecdoteForm)
 //<form onSubmit={store.store.dispatch(createAnecdote())}>
 
 // <form className="submitForm" onSubmit={submitNote}>
