@@ -29,38 +29,34 @@ const getId = () => (100000 * Math.random()).toFixed(0)
 
 var anecdoteObject
 
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0
-  }
-}
-
 const sort = (anecdotes) => {
   let sortedBlogs = anecdotes.sort(function (a, b) {
     return b.votes - a.votes
   })
-
-  //console.log('sort() sortedBlogs', sortedBlogs)
   return sortedBlogs
 }
 
-
+/* älä muuta reducerin statea! Vaan palauta uusi haluttu tila */
 const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case 'NEW_NOTE':
-      console.log('counterReducer case "NEW_NOTE"')
-      state.push(action.data)
-      state.filter = 'IMPORTANT'
-      return sort(state)
+      console.log('anecdoteReducer case "NEW_NOTE"')
+      return sort([...state, action.data])
+
+      /*
+      Puretaan tää vaikka osiin:
+      [...state, action.data]
+      const copy = []
+      state.forEach(e => copy.push(e))
+      copy.push(action.data)
+      */
+
     case 'VOTE':
-      console.log('counterReducer case "VOTE"')
+      console.log('anecdoteReducer case "VOTE"')
 
       let newAnecdotesList = state.map(anecdote => {
       if(anecdote.id === action.id){
-        console.log('iffissä')
         anecdoteObject = anecdote
         anecdoteObject.votes++      
         anecdote = anecdoteObject
@@ -69,7 +65,7 @@ const reducer = (state = initialState, action) => {
       })      
         return sort(newAnecdotesList)     
     case 'BAD':
-      console.log('counterReducer case "BAD"')
+      console.log('anecdoterReducer case "BAD"')
       return state = {
         good: state.good,
         ok: state.ok,
@@ -90,15 +86,13 @@ export const voteAnecdote = (id) => {
 }
 
 export const createAnecdote = (content) => {
-  //console.log('createAnecdote metodissa')
-
   anecdoteObject = {
     type: 'NEW_NOTE',
     data: {
       content: content,
-      id: getId(),
-      votes: 0,
-      important: false
+      id: parseInt(getId()),
+      important: true,
+      votes: 0
     }
   }
   return anecdoteObject

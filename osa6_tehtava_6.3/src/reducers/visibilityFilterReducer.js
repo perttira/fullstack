@@ -2,7 +2,7 @@ const visibilityFilterReducer = (state = 'ALL', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
       console.log('visibilityFilterReducer.js SET_FILTER')
-
+      
       return action.visibilityFilter
     default:
       return state

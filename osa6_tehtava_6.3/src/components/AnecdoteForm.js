@@ -2,14 +2,12 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import  { useField } from '../hooks'
 import  { setNotification } from '../reducers/notificationReducer'
-import { 
-  createAnecdote
-} from '../reducers/anecdoteReducer' 
-
+import  { createAnecdote } from '../reducers/anecdoteReducer'
+import { visibilityFilterChange } from '../reducers/visibilityFilterReducer'
 import { log } from 'util'
 
 
-const AnecdoteForm = (store) => {
+const AnecdoteForm = (props) => {
   const inputHandler = useField('text')
 
   //const [noteField, setNoteField] = useState('')
@@ -21,12 +19,11 @@ const AnecdoteForm = (store) => {
 
   const submitAnecdote = (e) => {
     e.preventDefault()
-    store.store.dispatch(createAnecdote(e.target.note.value))
+    props.createAnecdote(e.target.note.value)
     inputHandler.reset()
-    store.store.dispatch(setNotification('YOU MADE A NEW ANECDOTE!'))
-    
+    props.setNotification('YOU MADE A NEW ANECDOTE!')
     setTimeout(() => {
-        store.store.dispatch(setNotification(''))
+        props.setNotification('')
     }, 5000)
       
   }
@@ -41,16 +38,13 @@ const AnecdoteForm = (store) => {
     </div>
   )
 }
+ 
 
-const mapStateToProps = (state) => {
-  return {
-    anecdotes: state.anecdotes,
-    filter: state.filter,
-  }
+const mapDispatchToProps = {
+  createAnecdote,
+  setNotification,
+  visibilityFilterChange
 }
 
-export default connect(mapStateToProps)(AnecdoteForm)
-//<form onSubmit={store.store.dispatch(createAnecdote())}>
-
-// <form className="submitForm" onSubmit={submitNote}>
+export default connect(null, mapDispatchToProps)(AnecdoteForm)
 

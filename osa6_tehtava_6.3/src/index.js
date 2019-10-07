@@ -59,6 +59,8 @@ ReactDOM.render(
 // 6.12 paremmat anekdootit, step10
 // 6.13 paremmat anekdootit, step11
 // 6.14 paremmat anekdootit, step12
+// 6.15* paremmat anekdootit, step13
+
 
 
 

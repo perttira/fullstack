@@ -31,7 +31,7 @@ const App = (props) => {
       <Filter/>
       <Anecdotes/>
       <VisibilityFilter />
-      {/*<AnecdoteForm store={props.store}/>*/}
+      <AnecdoteForm/>
     </div>
     
   )

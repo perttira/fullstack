@@ -8,15 +8,6 @@ const Notification = (props) => {
     borderWidth: 1
   }
 
-  /*
-  return (
-    <div style={style}>
-      render here notification...
-    </div>
-  )
-  */
- console.log('Notification.js props.notify', props.notify)  
-
  return (
   <div style={style}>
     {props.notify}

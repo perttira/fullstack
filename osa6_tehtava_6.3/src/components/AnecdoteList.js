@@ -17,6 +17,7 @@ const Anecdotes = (props) => {
   */
  // const { anecdotes, visibilityFilter } = store.store.getState()
   
+  
   const anecdotesToShow = () => {
     if (props.visibilityFilter === 'ALL') {
       return props.anecdotes
@@ -35,9 +36,8 @@ const Anecdotes = (props) => {
     }, 5000)   
   }
 
-  console.log('AnecdoteList.js anecdotesToShow()', anecdotesToShow())
   const filtteroi = anecdotesToShow().filter(anecdotes => anecdotes.content.startsWith(props.filter))
-  console.log('filtteroi', filtteroi)
+  console.log('filterReducer.js filtteroi', filtteroi)
 
 
   return (
@@ -46,12 +46,22 @@ const Anecdotes = (props) => {
     </div>
   )
 }
-
+/*
+const anecdotesToShow = ({ anecdotes, visibilityFilter }) => {
+  if (visibilityFilter === 'ALL') {
+    return anecdotes
+  }
+    return visibilityFilter === 'IMPORTANT'
+    ? anecdotes.filter(note => note.important)
+    : anecdotes.filter(note => !note.important)
+}
+*/
 const mapStateToProps = (state) => {
   return {
     anecdotes: state.anecdotes,
     visibilityFilter: state.visibilityFilter,
     filter: state.filter
+    //visibleNotes: anecdotesToShow(state.anecdotes)
   }
 }
 
