@@ -4,6 +4,8 @@ import  { useField } from '../hooks'
 import  { setNotification } from '../reducers/notificationReducer'
 import  { createAnecdote } from '../reducers/anecdoteReducer'
 import { visibilityFilterChange } from '../reducers/visibilityFilterReducer'
+import anecdoteService from '../services/anecdotes'
+
 import { log } from 'util'
 
 
@@ -17,11 +19,17 @@ const AnecdoteForm = (props) => {
   //console.log('Anecdotes')
   //const anecdotes = [1,2,3]
 
-  const submitAnecdote = (e) => {
+  const submitAnecdote = async (e) => {
     e.preventDefault()
-    props.createAnecdote(e.target.note.value)
-    inputHandler.reset()
+    
+    //props.createAnecdote(e.target.note.value)
+    const content = e.target.note.value
+    e.target.note.value = ''
+    const newNote = await anecdoteService.createNew(content)
+    props.createAnecdote(newNote)
+
     props.setNotification('YOU MADE A NEW ANECDOTE!')
+
     setTimeout(() => {
         props.setNotification('')
     }, 5000)

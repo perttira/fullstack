@@ -37,11 +37,13 @@ const sort = (anecdotes) => {
 }
 
 /* älä muuta reducerin statea! Vaan palauta uusi haluttu tila */
-const reducer = (state = initialState, action) => {
+const reducer = (state = [], action) => {
 
   switch (action.type) {
     case 'NEW_NOTE':
       console.log('anecdoteReducer case "NEW_NOTE"')
+      console.log('anecdoteReducer case "NEW_NOTE" action.data', action.data)
+
       return sort([...state, action.data])
 
       /*
@@ -77,14 +79,46 @@ const reducer = (state = initialState, action) => {
         ok: 0,
         bad: 0
       }
+    case 'INIT_NOTES':
+    return action.data
+    
     default: return sort(state)
   }
 }
 
+export const initializeNotes = (notes) => {
+  return {
+    type: 'INIT_NOTES',
+    data: notes,
+  }
+}
 export const voteAnecdote = (id) => {
   return {type: 'VOTE', id: id}
 }
 
+export const createAnecdote = (data) => {
+
+  data.votes = 0
+  /*
+  anecdoteObject = {
+    type: 'NEW_NOTE',
+    content: data,
+    //id: parseInt(getId()),
+    important: true,
+    votes: 0
+  }
+  */
+   // console.log('anecdoteReducer.js createAnecdote anecdoteObject', anecdoteObject)
+    console.log('anecdoteReducer.js createAnecdote data', data)
+
+    return {
+      type: 'NEW_NOTE',
+      data
+    }
+  }
+
+
+/*
 export const createAnecdote = (content) => {
   anecdoteObject = {
     type: 'NEW_NOTE',
@@ -97,5 +131,6 @@ export const createAnecdote = (content) => {
   }
   return anecdoteObject
 }
+*/
 
 export default (reducer)
