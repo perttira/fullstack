@@ -10,11 +10,12 @@ const Anecdotes = (props) => {
   
   const submitVote = (id, content) => {
     props.voteAnecdote(id)
-    props.setNotification('YOU VOTED ANECDOTE: '+ content +'!')
-    
+    props.setNotification('YOU VOTED ANECDOTE: '+ content +'!', 5000)
+   /* 
     setTimeout(() => {
         props.setNotification('')
-    }, 5000)   
+    }, 5000)
+    */   
   }
 
   const filtteroi = props.visibleNotes.filter(anecdotes => anecdotes.content.startsWith(props.filter))

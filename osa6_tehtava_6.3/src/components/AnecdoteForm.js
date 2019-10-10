@@ -28,12 +28,7 @@ const AnecdoteForm = (props) => {
     console.log('AnecdoteForm submitAnecdote content', content)
     //const newNote = await createAnecdote(content)
     props.createAnecdote(content)
-
-    props.setNotification('YOU MADE A NEW ANECDOTE!')
-
-    setTimeout(() => {
-        props.setNotification('')
-    }, 5000)
+    props.setNotification('YOU MADE A NEW ANECDOTE!', 5000)
       
   }
   
