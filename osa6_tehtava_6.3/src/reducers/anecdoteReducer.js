@@ -1,4 +1,6 @@
 import { switchCase } from "@babel/types"
+import anecdoteService from '../services/anecdotes'
+
 
 const initialState = [
   {
@@ -86,10 +88,13 @@ const reducer = (state = [], action) => {
   }
 }
 
-export const initializeNotes = (notes) => {
-  return {
-    type: 'INIT_NOTES',
-    data: notes,
+export const initializeNotes = () => {
+  return async dispatch => {
+    const notes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT_NOTES',
+      data: notes,
+    })
   }
 }
 export const voteAnecdote = (id) => {
@@ -97,40 +102,11 @@ export const voteAnecdote = (id) => {
 }
 
 export const createAnecdote = (data) => {
-
   data.votes = 0
-  /*
-  anecdoteObject = {
-    type: 'NEW_NOTE',
-    content: data,
-    //id: parseInt(getId()),
-    important: true,
-    votes: 0
-  }
-  */
-   // console.log('anecdoteReducer.js createAnecdote anecdoteObject', anecdoteObject)
-    console.log('anecdoteReducer.js createAnecdote data', data)
-
     return {
       type: 'NEW_NOTE',
       data
     }
   }
-
-
-/*
-export const createAnecdote = (content) => {
-  anecdoteObject = {
-    type: 'NEW_NOTE',
-    data: {
-      content: content,
-      id: parseInt(getId()),
-      important: true,
-      votes: 0
-    }
-  }
-  return anecdoteObject
-}
-*/
 
 export default (reducer)

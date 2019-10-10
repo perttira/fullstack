@@ -5,7 +5,6 @@ import Filter from './components/Filter'
 import AnecdoteForm from './components/AnecdoteForm'
 import VisibilityFilter from './components/VisibilityFilter'
 import Notification from './components/Notification'
-import anecdoteService from './services/anecdotes'
 import { initializeNotes } from './reducers/anecdoteReducer'
 
 import { log } from 'util'
@@ -15,8 +14,7 @@ import { log } from 'util'
 const App = (props) => {
   
   useEffect(() => {
-    anecdoteService
-      .getAll().then(notes => props.initializeNotes(notes))
+    props.initializeNotes()
   },[])
 
   //const anecdotes = store.getState()
