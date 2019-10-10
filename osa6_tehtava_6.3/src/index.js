@@ -1,14 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import App from './App'
-import anecdoteReducer from './reducers/anecdoteReducer'
-import filterReducer from './reducers/filterReducer'
-import visibilityFilterReducer from './reducers/visibilityFilterReducer'
-import notificationReducer from './reducers/notificationReducer'
+import store from './store'
 
-import { log } from 'util'
+//import { log } from 'util'
 //import { createAnecdote } from './reducers/anecdoteReducer'
 //import { filterChange } from './reducers/visibilityFilterReducer'
 //import { setNotification } from './reducers/notificationReducer'
@@ -21,17 +17,18 @@ import { log } from 'util'
 
 
 
-
+/*
 const reducer = combineReducers({
   anecdotes: anecdoteReducer,
   visibilityFilter: visibilityFilterReducer,
   notify: notificationReducer,
   filter: filterReducer
 })
+*/
 
-const store = createStore(reducer)
+//const store = createStore(reducer)
 
-console.log('index.js store', store)
+//console.log('index.js store', store)
 
 
 //store.subscribe(() => console.log(store.getState()))
@@ -62,6 +59,8 @@ ReactDOM.render(
 // 6.15* paremmat anekdootit, step13
 // 6.16 anekdootit ja backend, step1
 // 6.17 anekdootit ja backend, step2
+// 6.18 anekdootit ja backend, step4
+
 
 
 

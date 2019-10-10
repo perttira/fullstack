@@ -8,25 +8,6 @@ import { log } from 'util'
 
 const Anecdotes = (props) => {
   
-  console.log('AnecdoteList props.anecdotes', props.anecdotes)
-
-  console.log('AnecdoteList props.filter', props.filter)
-  /*
-  Huomaa miten storen tilan kentät on otettu tuttuun tapaan
-  destrukturoimalla apumuuttujiin 
-  */
- // const { anecdotes, visibilityFilter } = store.store.getState()
-  
-  
-  const anecdotesToShow = () => {
-    if (props.visibilityFilter === 'ALL') {
-      return props.anecdotes
-    }
-
-    return props.visibilityFilter === 'IMPORTANT'
-      ? props.anecdotes.filter(note => note.important)
-      : props.anecdotes.filter(note => !note.important)
-  }
   const submitVote = (id, content) => {
     props.voteAnecdote(id)
     props.setNotification('YOU VOTED ANECDOTE: '+ content +'!')
@@ -36,9 +17,7 @@ const Anecdotes = (props) => {
     }, 5000)   
   }
 
-  const filtteroi = anecdotesToShow().filter(anecdotes => anecdotes.content.startsWith(props.filter))
-  console.log('filterReducer.js filtteroi', filtteroi)
-
+  const filtteroi = props.visibleNotes.filter(anecdotes => anecdotes.content.startsWith(props.filter))
 
   return (
     <div>
@@ -46,7 +25,7 @@ const Anecdotes = (props) => {
     </div>
   )
 }
-/*
+
 const anecdotesToShow = ({ anecdotes, visibilityFilter }) => {
   if (visibilityFilter === 'ALL') {
     return anecdotes
@@ -55,13 +34,13 @@ const anecdotesToShow = ({ anecdotes, visibilityFilter }) => {
     ? anecdotes.filter(note => note.important)
     : anecdotes.filter(note => !note.important)
 }
-*/
+
 const mapStateToProps = (state) => {
   return {
     anecdotes: state.anecdotes,
     visibilityFilter: state.visibilityFilter,
-    filter: state.filter
-    //visibleNotes: anecdotesToShow(state.anecdotes)
+    filter: state.filter,
+    visibleNotes: anecdotesToShow(state)
   }
 }
 
