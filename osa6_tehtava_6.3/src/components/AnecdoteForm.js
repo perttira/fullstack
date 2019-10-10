@@ -4,7 +4,7 @@ import  { useField } from '../hooks'
 import  { setNotification } from '../reducers/notificationReducer'
 import  { createAnecdote } from '../reducers/anecdoteReducer'
 import { visibilityFilterChange } from '../reducers/visibilityFilterReducer'
-import anecdoteService from '../services/anecdotes'
+//import anecdoteService from '../services/anecdotes'
 
 import { log } from 'util'
 
@@ -25,8 +25,9 @@ const AnecdoteForm = (props) => {
     //props.createAnecdote(e.target.note.value)
     const content = e.target.note.value
     e.target.note.value = ''
-    const newNote = await anecdoteService.createNew(content)
-    props.createAnecdote(newNote)
+    console.log('AnecdoteForm submitAnecdote content', content)
+    //const newNote = await createAnecdote(content)
+    props.createAnecdote(content)
 
     props.setNotification('YOU MADE A NEW ANECDOTE!')
 

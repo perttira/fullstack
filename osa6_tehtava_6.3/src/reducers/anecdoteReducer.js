@@ -93,20 +93,38 @@ export const initializeNotes = () => {
     const notes = await anecdoteService.getAll()
     dispatch({
       type: 'INIT_NOTES',
-      data: notes,
+      data: notes
     })
   }
 }
+
 export const voteAnecdote = (id) => {
   return {type: 'VOTE', id: id}
 }
 
 export const createAnecdote = (data) => {
+
+  console.log('anecdoteReducer.js createAnecdote DATA', data)
+  return async dispatch => {
+    const response = await anecdoteService.createNew(data)
+    console.log('anecdoteReducer.js createAnecdote response', response)
+    dispatch({
+      type: 'NEW_NOTE',
+      data: response
+    })
+  }
+
+
+
+/*
+  
   data.votes = 0
+
     return {
       type: 'NEW_NOTE',
       data
     }
+  */  
   }
 
 export default (reducer)
