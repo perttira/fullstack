@@ -8,8 +8,6 @@ import { log } from 'util'
 const Anecdotes = (props) => (
 
   <div> 
-    <h2>TKTL notes app</h2> 
-    {console.log('anecdotes', props.anecdotes)}
     {props.anecdotes.map(note =>
         <li key={note.id}>
           <Link to={`/notes/${note.id}`}>{note.content}</Link>
@@ -18,8 +16,10 @@ const Anecdotes = (props) => (
   </div>
 )
 
-const Create = () => (
-  <div> <h2>Notes</h2> </div>
+const Create = (props) => (
+  <div>
+    {CreateNew(props)}
+  </div>
 )
 
 const About = () => (
@@ -36,18 +36,6 @@ const About = () => (
   </div>
 )
 
-
-
-
-
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
-    </ul>
-  </div>
-)
 
 
 
@@ -72,12 +60,12 @@ const CreateNew = (props) => {
       author,
       info,
       votes: 0
-    })
+    }, props.notification)
   }
 
   return (
     <div>
-      <h2>create a new anecdote</h2>
+      <h2>Create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
@@ -118,9 +106,13 @@ const App = () => {
 
   const [notification, setNotification] = useState('')
 
-  const addNew = (anecdote) => {
+  const addNew = (anecdote, notification) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification('Loit uuden anekdootin!')
+    setTimeout(() => {
+      setNotification('')
+  }, 10000)
   }
 
   const anecdoteById = (id) =>
@@ -154,6 +146,7 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
+      {notification}
     <Router>
       <div>
         <div>
@@ -162,7 +155,7 @@ const App = () => {
           <Link style={padding} to="/users">About</Link>
         </div>
         <Route exact path="/" render={() => <Anecdotes anecdotes={anecdotes}/>} />
-        <Route path="/notes" render={() => <Create />} />
+        <Route path="/notes" render={() => notification ? <Redirect to="/"/> : <Create anecdotes={anecdotes} addNew={addNew} setNotification={setNotification}/>} />
         <Route path="/users" render={() => <About />} />
 
 
