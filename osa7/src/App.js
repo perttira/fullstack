@@ -3,57 +3,23 @@ import {
   BrowserRouter as Router,
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
+import { log } from 'util'
 
-const Anecdotes = () => (
-  <div> <h2>TKTL notes app</h2> </div>
+const Anecdotes = (props) => (
+
+  <div> 
+    <h2>TKTL notes app</h2> 
+    {console.log('anecdotes', props.anecdotes)}
+    {props.anecdotes.map(note =>
+        <li key={note.id}>
+          <Link to={`/notes/${note.id}`}>{note.content}</Link>
+        </li>
+      )}
+  </div>
 )
 
 const Create = () => (
   <div> <h2>Notes</h2> </div>
-)
-
-
-
-const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  }
-
-  /*
-  return (
-    <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
-    </div>
-  )
-  */
-
- return (
-  <div>
-    <Router>
-      <div>
-        <div>
-          <Link style={padding} to="/">Anecdotes</Link>
-          <Link style={padding} to="/notes">Create new</Link>
-          <Link style={padding} to="/users">About</Link>
-        </div>
-        <Route exact path="/" render={() => <Anecdotes />} />
-        <Route path="/notes" render={() => <Create />} />
-        <Route path="/users" render={() => <About />} />
-      </div>
-    </Router>
-  </div>
-)
-}
-
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
-    </ul>
-  </div>
 )
 
 const About = () => (
@@ -69,6 +35,21 @@ const About = () => (
     <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
   </div>
 )
+
+
+
+
+
+const AnecdoteList = ({ anecdotes }) => (
+  <div>
+    <h2>Anecdotes</h2>
+    <ul>
+      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+    </ul>
+  </div>
+)
+
+
 
 const Footer = () => (
   <div>
@@ -156,15 +137,45 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const padding = {
+    paddingRight: 5
+  }
+
+  console.log('anecdotes', anecdotes)
+
+  const Note = ({ note }) => (
+    <div>
+      <h2>{note.content}</h2>
+      <div>{note.user}</div>
+      <div><strong>{note.important ? 'important' : ''}</strong></div>
+    </div>
+  )
+
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
+    <Router>
+      <div>
+        <div>
+          <Link style={padding} to="/">Anecdotes</Link>
+          <Link style={padding} to="/notes">Create new</Link>
+          <Link style={padding} to="/users">About</Link>
+        </div>
+        <Route exact path="/" render={() => <Anecdotes anecdotes={anecdotes}/>} />
+        <Route path="/notes" render={() => <Create />} />
+        <Route path="/users" render={() => <About />} />
+
+
+        <Route exact path="/notes/:id" render={({ match }) =>
+      <Note note={anecdoteById(match.params.id)} />
+    } />
+
+      </div>
+    </Router>
+
       <Footer />
-    </div>
+      </div>
+
   )
 }
 
