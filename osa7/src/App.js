@@ -3,16 +3,28 @@ import {
   BrowserRouter as Router,
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
+import { Table, Form, Button } from 'react-bootstrap'
 import { log } from 'util'
 
 const Anecdotes = (props) => (
 
   <div> 
-    {props.anecdotes.map(note =>
-        <li key={note.id}>
-          <Link to={`/notes/${note.id}`}>{note.content}</Link>
-        </li>
-      )}
+    <Table striped>
+      <tbody>
+        {props.anecdotes.map(note =>
+          <tr key={note.id}>
+            <td>
+            <Link to={`/notes/${note.id}`}>
+                {note.content}
+              </Link>
+            </td>
+            <td>
+              {note.user}
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </Table>
   </div>
 )
 
@@ -143,8 +155,10 @@ const App = () => {
     </div>
   )
 
+  
+
   return (
-    <div>
+    <div class="container">
       <h1>Software anecdotes</h1>
       {notification}
     <Router>

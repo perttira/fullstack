@@ -328,7 +328,7 @@ const App = () => {
                 </div>
                 <Styles.Container className={classes.cardGrid} maxWidth="md">
                   <Styles.Grid container spacing={4}>
-                    {map <Blog key={blog.id} blog={blog} handleClick={handleClick} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
+                    {blogs.map( blog => <Blog key={blog.id} blog={blog} handleClick={handleClick} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
                   </Styles.Grid>
                 </Styles.Container>
               </main>
