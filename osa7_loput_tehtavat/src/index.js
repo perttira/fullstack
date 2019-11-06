@@ -12,6 +12,8 @@ ReactDOM.render(
 )
 
 // 7.4: redux, step1
+// 7.5 redux, step2
+
 
 
 

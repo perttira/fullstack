@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import  { setNotification } from './reducers/notificationReducer'
+import  { acGetBlogs } from './reducers/blogReducer'
 import Notification from './components/Notification'
 import Blog from './components/Blog'
 import SingleBlogView from './components/SingleBlogView'
@@ -34,17 +35,16 @@ const App = (props) => {
 
       -Call Hooks from React function components.
       -Call Hooks from custom Hooks
+
+      If you want to run an effect and clean it up only once (on mount and unmount),
+      you can pass an empty array ([]) as a second argument. This tells React that your
+      effect doesn’t depend on any values from props or state, so it never needs to re-run.
+      This isn’t handled as a special case — it follows directly from how the dependencies array always works.
+
+
   */
   useEffect(() => {
-    blogService
-      .getAll().then(initialBlogs => {
-        console.log('intialBlogs', initialBlogs)
-        let sortedBlogs = initialBlogs.sort(function (a, b) {
-          return b.likes - a.likes
-        })
-        setBlogs(sortedBlogs)
-      })
-
+    props.acGetBlogs()
   }, [])
 
   /*  Sovellusta on vielä laajennettava siten, että kun sivulle tullaan uudelleen,
@@ -244,7 +244,7 @@ const App = (props) => {
   }
   const classes = Styles.useStyles()
 
-/*
+  /*
   const showSingleBlog = () => {
     setSingleBlogVisible(!singleBlogVisible)
     console.log('showSingleBlog metodissa')
@@ -301,7 +301,7 @@ const App = (props) => {
                 </div>
                 <Styles.Container className={classes.cardGrid} maxWidth="md">
                   <Styles.Grid container spacing={4}>
-                    {blogs.map( blog => <Blog key={blog.id} blog={blog} handleClick={handleClick} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
+                    {props.blogs.map( blog => <Blog key={blog.id} blog={blog} handleClick={handleClick} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
                   </Styles.Grid>
                 </Styles.Container>
               </main>
@@ -371,8 +371,16 @@ return(
 
 // export default App
 
-const mapDispatchToProps = {
-  setNotification
+const mapStateToProps = (state) => {
+  console.log('mapStateToProps state', state)
+  return {
+    blogs: state.blogs,
+  }
 }
 
-export default connect(null, mapDispatchToProps)(App)
+const mapDispatchToProps = {
+  setNotification,
+  acGetBlogs
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

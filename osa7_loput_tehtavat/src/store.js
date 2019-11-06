@@ -1,13 +1,11 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk';
-//import anecdoteReducer from './reducers/anecdoteReducer'
-//import filterReducer from './reducers/filterReducer'
-//import visibilityFilterReducer from './reducers/visibilityFilterReducer'
+import thunk from 'redux-thunk'
+import blogReducer from './reducers/blogReducer'
 import notificationReducer from './reducers/notificationReducer.js'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 const reducer = combineReducers({
-  //anecdotes: anecdoteReducer,
+  blogs: blogReducer,
   //visibilityFilter: visibilityFilterReducer,
   notify: notificationReducer,
   //filter: filterReducer

@@ -1,7 +1,3 @@
-import { log } from "util"
-
-//import { log } from "util"
-
 var notification = ''
 
 const notificationReducer = (state = notification, action) => {
