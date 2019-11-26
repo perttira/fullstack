@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import  { setNotification } from './reducers/notificationReducer'
-import  { acGetBlogs } from './reducers/blogReducer'
+import  { acGetBlogs, acAddBlog } from './reducers/blogReducer'
+import  { acUserLogin } from './reducers/userReducer'
+import  { acSetUser } from './reducers/userReducer'
 import Notification from './components/Notification'
 import Blog from './components/Blog'
 import SingleBlogView from './components/SingleBlogView'
@@ -44,26 +46,33 @@ const App = (props) => {
 
   */
   useEffect(() => {
+    //console.log('useEffect props.acGetBlogs()', props.acGetBlogs())
     props.acGetBlogs()
   }, [])
 
   /*  Sovellusta on vielä laajennettava siten, että kun sivulle tullaan uudelleen,
       esim. selaimen uudelleenlataamisen yhteydessä, tulee sovelluksen tarkistaa löytyykö
-      local storagesta tiedot kirjautuneesta käyttäjästä. Jos löytyy, asetetaan ne 
+      local storagesta tiedot kirjautuneesta käyttäjästä. Jos löytyy, asetetaan ne
       sovelluksen tilaan ja noteServicelle
   */
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      //setUser(user)
+      console.log('useEffect user', user)
+      props.acSetUser(user)
+      console.log('useEffect user', props.user)
+      //blogService.setToken(user.token)
     }
   }, [])
 
   /*
       Frontend tallettaa onnistuneen kirjautumisen yhteydessä backendilta saamansa
-      tokenin sovelluksen tilan user kenttään token
+      tokenin sovelluksen tilan user kenttään token. Async wraps the return value in the promise.
+      code execution is halted at await.
+      Its not halted technically as other things can use the cpu till this promise is resolved.
+      So anything further down is not processed till promise is resolved.
   */
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -71,13 +80,15 @@ const App = (props) => {
     const username = e.target.username.value
     const password = e.target.password.value
 
-    try {
-      const user = await loginService.login({
-        username, password
-      })
+    /*
+    Lets say the await promise is rejected. Then the promise wrapping done by
+     async will also result in rejected promise if this await rejected promise is not handled in try … catch.
+    */
 
-      console.log('App.js handlelogin user :  ', user)
-      setUser(user)
+    try {
+      await props.acUserLogin({ username, password })
+
+      //console.log('handleLogin kissa', kissa)
 
       setIsLoading(true)
 
@@ -92,19 +103,23 @@ const App = (props) => {
           Javascript-olioksi metodilla JSON.parse. Efektin parametrina oleva tyhjä taulukko varmistaa sen,
           että efekti suoritetaan ainoastaan kun komponentti renderöidään ensimmäistä kertaa.
           Nyt käyttäjä pysyy kirjautuneena sovellukseen ikuisesti. Sovellukseen olisikin kenties syytä
-          lisätä logout-toiminnallisuus, joka poistaisi kirjautumistiedot local storagesta. 
+          lisätä logout-toiminnallisuus, joka poistaisi kirjautumistiedot local storagesta.
           Jätämme kuitenkin uloskirjautumisen harjoitustehtäväksi.
       */
-      // window.localStorage.setItem('name', user.name)
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
 
-      blogService.setToken(user.token)
+      // TODO laita window.localStoragen asettaminen ja blogService.setToken userReducerin tehtäväksi
+     /* window.localStorage.setItem('name', user.name)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(props.user)
+      )
+      blogService.setToken(props.user.token)
+      */
     } catch (exception) {
       props.setNotification('käyttäjätunnus tai salasana virheellinen', 5000)
     }
   }
+
+  console.log('props.user ', props.user)
 
   const handleCreateBlog = async (e) => {
     e.preventDefault()
@@ -114,34 +129,15 @@ const App = (props) => {
         jolla luotaisiin uusi blogi heti blogin luomisen jälkeen
     */
     toggleRef.current.toggleVisibility()
-
-    //console.log('App.js handleCreateBlog() e.target', e.target)
-    const noteObject = {
-      title: e.target.title.value,
-      author: e.target.author.value,
-      url: e.target.url.value,
-      text: e.target.text.value,
-      user: {
-        username: user.username,
-        name: user.name,
-        id: user.id
-      },
-
-      likes: 0
-    }
-
-    //console.log('App.js handleCreateBlog() noteObject', noteObject)
+    e.target.user = props.user
 
     try{
-      blogService
-        .create(noteObject).then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))
-          props.setNotification('New blog '+ noteObject.title + ' added', 5000)
-        })
+      blogs.acAddBlog(e)
+      props.setNotification('New blog '+ e.target.title.value + ' added', 5000)
     } catch (exception){
       props.setNotification('Could not add new blog, please try again', 5000)
     }
-  }
+  } // handleCreateBlog()
 
   const handleLikeBlog = (blog) => {
     const blogObject = {
@@ -192,7 +188,7 @@ const App = (props) => {
   }
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
-    setUser('')
+    props.acUser(null)
   }
 
   /*  Muutoksenkäsittelijä on yksinkertainen, se destrukturoi parametrina tulevasta
@@ -213,6 +209,7 @@ const App = (props) => {
           handlePasswordChange={passwordField.onChange}
           handleSubmit={handleLogin}
         />
+        <Notification/>
       </Togglable>
     )
   }
@@ -266,7 +263,7 @@ const App = (props) => {
     return(
       <SingleBlogView blog={singleBlog} onClick={setBlogVisibly} handleRemoveBlogClick={handleRemoveBlock}/>
     )
-  } else  if (user === null) {
+  } else  if (props.user === null) {
     return (
       loginForm()
     )
@@ -301,7 +298,7 @@ const App = (props) => {
                 </div>
                 <Styles.Container className={classes.cardGrid} maxWidth="md">
                   <Styles.Grid container spacing={4}>
-                    {props.blogs.map( blog => <Blog key={blog.id} blog={blog} handleClick={handleClick} user={user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
+                    {props.blogs.map( blog => <Blog key={blog.id} blog={blog} handleClick={handleClick} user={props.user} handleLikeClick={handleLikeBlog} handleRemoveBlogClick={handleRemoveBlock}/>)}
                   </Styles.Grid>
                 </Styles.Container>
               </main>
@@ -375,12 +372,16 @@ const mapStateToProps = (state) => {
   console.log('mapStateToProps state', state)
   return {
     blogs: state.blogs,
+    user: state.user,
   }
 }
 
 const mapDispatchToProps = {
   setNotification,
-  acGetBlogs
+  acGetBlogs,
+  acAddBlog,
+  acUserLogin,
+  acSetUser
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

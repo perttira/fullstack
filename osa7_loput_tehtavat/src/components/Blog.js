@@ -33,10 +33,9 @@ const Blog = ({ blog, handleClick, handleRemoveBlogClick, user }) => {
   const [singleBlogVisible, setSingleBlogVisible] = useState(false)
   const [blogVisible, setBlogVisible] = useState(false)
 
-  console.log('Blog.js key', blog.id)
-  console.log('Blog.js singleBlogVisible', singleBlogVisible)
-
-  console.log('Blog.js blog.text', blog.text)
+  //console.log('Blog.js key', blog.id)
+  //console.log('Blog.js singleBlogVisible', singleBlogVisible)
+  //console.log('Blog.js blog.text', blog.text)
 
   var text = ''
 
@@ -119,14 +118,17 @@ const Blog = ({ blog, handleClick, handleRemoveBlogClick, user }) => {
   //console.log('Blog.js user', user)
   //console.log('Blog.js blog', blog)
   //console.log('Blog.js user.id', user.id)
-  console.log('Blog.js blog.user.id', blog.user.id)
+  //console.log('Blog.js blog.user.id', blog.user.id)
+
+  /* TODO vaihda userin tilalle props.login jn. In fact handleLogin -funktion voisi siirtää tähän komponenttiin
   if(user.id === blog.user.id) { // TODO kun kirjautunut käyttäjä luo blogin, hänelle ei kuitenkaan näy "remove blog" nappi. Luultavasti tietokannassa luotu id ei päivity frontendille
     var showButton = 'block'
   }else{
     showButton = 'none'
   }
+  */
   const hideRemoveStyle = {
-    display: showButton
+    //display: showButton
   }
   const classes = useStyles()
 

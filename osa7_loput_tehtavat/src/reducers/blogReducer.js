@@ -1,18 +1,14 @@
-//var notification = ''
 import blogService from '../services/blogs'
+import React, { useState, useEffect } from 'react'
 
-let initialState = ''
-/*
-const blogStateObject = {
-  allBlogs: getAllBlogs(),
-  todos: []
-}
-*/
+import { connect } from 'react-redux'
+//import store from '../store'
+import userReducer from '../services/blogs'
+
 
 const blogReducer = (state = [], action) => {
+  //console.log('blogReducer action.type', action.type)
   //console.log('blogReducer action.data', action.data)
-  console.log('blogReducer action.type', action.type)
-  console.log('blogReducer action.data', action.data)
 
   switch (action.type) {
   case 'GET_BLOGS':
@@ -26,39 +22,10 @@ const blogReducer = (state = [], action) => {
   }
 }
 
-export const acAddBlog = (content) => {
-  // return {type: 'SET_NOTIFICATION', content: content}
-  return async dispatch => {
-    await setTimeout(() => {
-      dispatch({
-        type: 'ADD_BLOG',
-        data: content
-      })
-    })
-  }
-}
-
-/*
-export const initializeNotes = () => {
-  return async dispatch => {
-    const notes = await noteService.getAll()
-    dispatch({
-      type: 'INIT_NOTES',
-      data: notes,
-    })
-  }
-}
-*/
-
 export const acGetBlogs = () => {
-  // return {type: 'SET_NOTIFICATION', content: content}
   return async dispatch => {
     let sortedBlogs = await blogService.getAll()
-
     sortedBlogs = sortedBlogs.sort(function (a, b) { return b.likes - a.likes })
-    //console.log('sortedBlogs', sortedBlogs)
-
-
     dispatch({
       type: 'GET_BLOGS',
       data: sortedBlogs
@@ -67,5 +34,45 @@ export const acGetBlogs = () => {
 }
 
 
+export const acAddBlog = (e) => {
+  //console.log('acAddBlog e', e)
+  //console.log('acAddBlog e.target.title.value', e.target.title.value)
+  //console.log('acAddBlog store.getState()', store.getState())
+  //console.log('acAddBlog e.target.user', e.target.user)
+
+  const noteObject = {
+    title: e.target.title.value,
+    author: e.target.author.value,
+    url: e.target.url.value,
+    text: e.target.text.value,
+    user: {
+      username: e.target.user.username,
+      name: e.target.user.name,
+      id: e.target.user.id
+    },
+
+    likes: 0
+  }
+
+  //console.log('acAddBlog noteObject', noteObject)
+
+
+  return async dispatch => {
+    let response = await blogService.create(noteObject)
+    //console.log('acAddBlog response', response)
+    dispatch({
+      type: 'ADD_BLOG',
+      data: response
+    })
+  }
+}
+/*
+const mapStateToProps = (state) => {
+  console.log('mapStateToProps state', state)
+  return {
+    user: state.user
+  }
+}
+*/
 
 export default (blogReducer)
